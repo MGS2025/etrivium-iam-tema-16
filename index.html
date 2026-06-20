@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tema 16 v1.0 — Modelo conceptual de datos | ETRIVIUM IAM</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--azul:#0055a0;--azul-dark:#003d73;--azul-deep:#002a52;--azul-light:#e8f0f8;--azul-05:rgba(0,85,160,.05);--azul-10:rgba(0,85,160,.10);--verde:#2d8659;--verde-bg:#e8f5ee;--rojo:#d13c3c;--rojo-bg:#fbeeed;--amber:#e89822;--amber-bg:#fdf4e4;--g100:#f5f7fa;--g200:#e8ecf0;--g300:#d1d7df;--g600:#4a5568;--g800:#2d3748;--font:'DM Sans',-apple-system,system-ui,sans-serif;--rad:8px;--sh:0 1px 3px rgba(0,0,0,.08);--shl:0 4px 16px rgba(0,0,0,.08)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--g800);background:var(--g100);line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:24px 20px 80px}
+.tabs{position:sticky;top:0;z-index:10;background:var(--g100);display:flex;flex-wrap:wrap;gap:6px;padding:12px 0;border-bottom:2px solid var(--azul-10);margin-bottom:24px}
+.tab-btn{border:1px solid var(--g300);background:#fff;color:var(--g600);padding:8px 14px;border-radius:6px;font:600 13px var(--font);cursor:pointer}
+.tab-btn:hover{border-color:var(--azul)}
+.tab-btn.active{background:var(--azul);color:#fff;border-color:var(--azul)}
+.tab-btn .version-badge{background:var(--azul);color:#fff;border-radius:10px;padding:1px 7px;font-size:11px;margin-left:6px}
+.tab-content{display:none}
+.tab-content.active{display:block;animation:f .2s ease}
+@keyframes f{from{opacity:0}to{opacity:1}}
+h1{font-size:26px;color:var(--azul-dark);margin-bottom:10px;line-height:1.25}
+h2{font-size:20px;color:var(--azul-dark);font-weight:700;margin:26px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--azul-10)}
+h3{font-size:16px;color:var(--azul);font-weight:600;margin:18px 0 8px}
+h4{font-size:14px;color:var(--azul-dark);font-weight:600;margin:14px 0 6px}
+p{margin:8px 0}
+ul,ol{margin:8px 0 12px 22px}li{margin:4px 0}
+u{text-decoration:underline}
+hr{border:0;border-top:1px solid var(--g200);margin:18px 0}
+code{background:var(--g200);padding:1px 6px;border-radius:3px;font-family:'SF Mono',Menlo,monospace;font-size:.88em;color:var(--azul-dark)}
+pre{background:#0d1b2a;color:#e7ecf2;padding:14px 16px;border-radius:var(--rad);overflow-x:auto;margin:12px 0}
+pre code{background:none;color:inherit;padding:0;font-size:13px;line-height:1.5}
+table{width:100%;border-collapse:collapse;margin:12px 0;background:#fff;border-radius:var(--rad);overflow:hidden;box-shadow:var(--sh);font-size:14px}
+th{background:var(--azul);color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:13px}
+td{padding:9px 12px;border-top:1px solid var(--g200);vertical-align:top}
+tr:nth-child(even) td{background:var(--azul-05)}
+.callout{border-left:4px solid var(--azul);background:var(--azul-light);padding:12px 16px;border-radius:4px;margin:14px 0}
+.callout .kicker{display:inline-block;font:700 11px var(--font);letter-spacing:.6px;text-transform:uppercase;color:var(--azul-dark);margin-right:8px}
+.callout.dato{border-left-color:var(--amber);background:var(--amber-bg)}.callout.dato .kicker{color:var(--amber)}
+.callout.ejercicio{border-left-color:var(--verde);background:var(--verde-bg)}.callout.ejercicio .kicker{color:var(--verde)}
+.callout.ayto{border-left-color:var(--azul);background:var(--azul-light)}
+.callout.ref{border-left-color:var(--g600);background:var(--g100)}.callout.ref .kicker{color:var(--g600)}
+.indice-outline ol{margin-left:18px}.indice-outline>ol{margin-left:0}
+svg{max-width:100%;height:auto;display:block;margin:14px auto;background:#fff;border:1px solid var(--g200);border-radius:var(--rad);padding:8px}
+.hero{background:linear-gradient(135deg,var(--azul-deep),var(--azul));color:#fff;padding:30px 28px;border-radius:var(--rad);margin-bottom:22px;box-shadow:var(--shl);position:relative}
+.hero h1{color:#fff}
+.hero .vbadge{position:absolute;top:18px;right:22px;background:var(--amber);color:#fff;padding:6px 12px;border-radius:6px;font:700 13px var(--font);letter-spacing:1px}
+.hero .sub{opacity:.92;font-size:14px;margin-top:6px}
+.hero .banner{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.22);font-size:13px;opacity:.92}
+.test-bar{position:sticky;top:64px;z-index:5;background:#fff;border:1px solid var(--g200);border-radius:var(--rad);padding:12px 16px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;box-shadow:var(--sh);margin-bottom:18px}
+.test-bar .kpi{font-size:13px;color:var(--g600)}
+.test-bar .kpi b{font-size:18px;color:var(--azul-dark);display:block}
+.test-bar button{border:0;border-radius:6px;padding:8px 14px;font:600 13px var(--font);cursor:pointer}
+.btn-c{background:var(--verde);color:#fff}.btn-r{background:var(--g200);color:var(--g800)}
+.question{background:#fff;border:1px solid var(--g200);border-radius:var(--rad);padding:16px 18px;margin-bottom:14px;box-shadow:var(--sh)}
+.q-num{font:700 12px var(--font);color:var(--azul);letter-spacing:.5px;margin-bottom:6px}
+.q-text{font-weight:600;margin-bottom:10px}
+.q-opt{display:flex;gap:10px;align-items:center;border:1px solid var(--g200);border-radius:6px;padding:9px 12px;margin:6px 0;cursor:pointer}
+.q-opt:hover{border-color:var(--azul)}
+.q-opt.selected{border-color:var(--azul);background:var(--azul-05)}
+.q-opt.correct{border-color:var(--verde);background:var(--verde-bg)}
+.q-opt.wrong{border-color:var(--rojo);background:var(--rojo-bg)}
+.q-letter{width:26px;height:26px;flex:0 0 26px;border-radius:50%;background:var(--azul);color:#fff;display:flex;align-items:center;justify-content:center;font:700 13px var(--font)}
+.q-answer{display:none;margin-top:10px;padding:12px 14px;background:var(--verde-bg);border-left:4px solid var(--verde);border-radius:4px;font-size:14px}
+.q-answer.show{display:block}
+.q-ref{font-size:12px;color:var(--g600);margin-top:6px}
+.footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--g300);font-size:12px;color:var(--g600);text-align:center}
+@media(max-width:640px){.tabs{top:0}.test-bar{top:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="tabs"><button class="tab-btn active" data-tab="inicio">Inicio <span class="version-badge">v1.0</span></button><button class="tab-btn" data-tab="contenido">Contenido</button><button class="tab-btn" data-tab="indice">Índice</button><button class="tab-btn" data-tab="diagramas">Diagramas</button><button class="tab-btn" data-tab="test">Test</button><button class="tab-btn" data-tab="casos">Casos</button><button class="tab-btn" data-tab="validacion">Validación</button><button class="tab-btn" data-tab="fuentes">Fuentes</button></nav>
+<section id="tab-inicio" class="tab-content active"><div class="hero">
+  <span class="vbadge">v1.0</span>
+  <h1>Tema 16 — Modelo conceptual de datos</h1>
+  <div class="sub">Entidades, atributos y relaciones · Reglas de modelización · Diagramas de flujo de datos · Descomposición en niveles · Flujogramas</div>
+  <div class="banner"><strong>Parte II — Técnico · C1 Ayuntamiento de Madrid</strong> · Piloto v1.0 · 2026-06-20 · Pendiente de validación</div>
+</div>
+<h2>Qué incluye este tema</h2>
+<table><thead><tr><th>Entregable</th><th>Cantidad</th></tr></thead><tbody>
+<tr><td>Contenido teórico</td><td>5 secciones · ~5.384 palabras</td></tr>
+<tr><td>Diagramas SVG inline</td><td>12 diagramas autosuficientes</td></tr>
+<tr><td>Banco de preguntas tipo test</td><td>60 preguntas A/B/C con corrección y penalización 1/3</td></tr>
+<tr><td>Casos prácticos Ayto Madrid</td><td>3 casos (Padrón, tasa de vado, licencia en sede electrónica)</td></tr>
+<tr><td>Fuentes Tier 1</td><td>14 referencias canónicas (Chen, DeMarco, ISO 5807, UML, MÉTRICA v3…)</td></tr>
+</tbody></table>
+<div class="callout ref"><span class="kicker">Cómo estudiar</span>Lee el <strong>Contenido</strong>, apóyate en los <strong>Diagramas</strong>, autoevalúate en el <strong>Test</strong> y practica con los <strong>Casos</strong>. Las cajas naranjas (DATO CLAVE) marcan lo más memorizable.</div>
+</section><section id="tab-contenido" class="tab-content">
+<hr>
+<h2>Convenciones del documento</h2>
+<p>Este tema incluye cuatro tipos de <strong>cajas callout</strong> para facilitar el estudio:</p>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span>Información de alta densidad memorística, con alta probabilidad de aparecer en el test oficial.</div>
+<div class="callout ejercicio"><span class="kicker">EJERCICIO RESUELTO</span>Problema + solución paso a paso (modelado de un E-R, niveles de un DFD, traza de un flujograma).</div>
+<div class="callout ayto"><span class="kicker">EJEMPLO AYTO MADRID</span>Aplicación real de la teoría al entorno municipal (Padrón, callejero, tributos, sede electrónica).</div>
+<div class="callout ref"><span class="kicker">REFERENCIA CRUZADA</span>Enlace conceptual a otros temas del temario oficial.</div>
+<p>Las fuentes se referencian con etiquetas breves tipo <code>[CHEN]</code> o <code>[ELMASRI, cap. 3]</code> — el registro completo está en <code>tema-16-fuentes.md</code>. Este tema combina <strong>notación clásica</strong> (la tradicional en oposiciones, alineada con MÉTRICA v3) y <strong>UML</strong> (estándar moderno), señalando la equivalencia entre ambas en cada técnica.</p>
+<hr>
+<h2>1. El modelado de sistemas de información</h2>
+<h3>1.1. Concepto de modelo, dato y modelo de datos</h3>
+<p>Un <strong>dato</strong> es la representación simbólica (numérica, alfabética, etc.) de un atributo de una entidad del mundo real; carece de significado por sí solo hasta que se procesa e interpreta como <strong>información</strong>. Un <strong>sistema de información (SI)</strong> capta, almacena, procesa y distribuye esa información para apoyar la toma de decisiones de una organización. [METRICA3]</p>
+<p>Un <strong>modelo</strong> es una representación abstracta y simplificada de una parcela de la realidad (el <em>universo del discurso</em> o dominio), que retiene los aspectos relevantes para un propósito y descarta el resto. Modelar es, por tanto, <strong>abstraer</strong>: decidir qué es esencial y cómo representarlo. [PRESSMAN]</p>
+<p>Un <strong>modelo de datos</strong> es un conjunto de <strong>conceptos, reglas y notación</strong> que permiten describir la estructura de una base de datos: los datos, sus relaciones, su semántica y las restricciones de integridad. [ELMASRI, cap. 2] Según el nivel de abstracción, se distinguen tres categorías:</p>
+<ul><li><strong>Modelos conceptuales (de alto nivel o semánticos)</strong>: próximos a cómo percibe los datos el usuario; independientes de cualquier gestor. El <strong>modelo Entidad-Relación</strong> es el más representativo.</li><li><strong>Modelos lógicos (de implementación o representativos)</strong>: próximos a cómo organiza los datos el SGBD. El <strong>modelo relacional</strong> es el dominante (ver Tema 17).</li><li><strong>Modelos físicos (de bajo nivel)</strong>: describen <em>cómo</em> se almacenan los datos en el soporte (ficheros, índices, bloques).</li></ul>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span><strong>Modelo conceptual</strong> = independiente del SGBD, cercano al usuario (E-R). <strong>Modelo lógico</strong> = dependiente del tipo de SGBD, cercano al diseñador (relacional). <strong>Modelo físico</strong> = dependiente del producto y del soporte (almacenamiento). No confundir los tres niveles: es la pregunta clásica del bloque de bases de datos.</div>
+<div class="callout ref"><span class="kicker">REFERENCIA CRUZADA</span>El <strong>modelo conceptual de datos</strong> (este tema) precede al <strong>diseño lógico y físico y la normalización</strong> (Tema 17), y se materializa en algún tipo de <strong>SGBD</strong> (Tema 15). El modelo de datos es el puente entre el análisis de requisitos y la base de datos operativa.</div>
+<h3>1.2. Niveles de abstracción: la arquitectura ANSI/SPARC</h3>
+<p>En 1975, el comité <strong>ANSI/X3/SPARC</strong> propuso una arquitectura de <strong>tres esquemas</strong> para separar la visión que cada agente tiene de los datos y conseguir <strong>independencia de datos</strong>. [ANSI-SPARC] Es la base teórica de todo el modelado:</p>
+<ol><li><strong>Nivel externo (o de vistas)</strong>: describe la parte de la base de datos que interesa a <strong>cada grupo de usuarios</strong>. Puede haber muchos esquemas externos (vistas), uno por perfil. Oculta el resto de los datos.</li><li><strong>Nivel conceptual (o lógico global)</strong>: describe <strong>toda</strong> la estructura de la base de datos para la comunidad de usuarios: entidades, atributos, relaciones y restricciones. Es <strong>único</strong> y no contiene detalles de almacenamiento. Aquí vive el <strong>modelo conceptual de datos</strong>.</li><li><strong>Nivel interno (o físico)</strong>: describe <strong>cómo</strong> se almacenan físicamente los datos: estructuras de ficheros, índices, rutas de acceso, ubicación en el soporte. Es <strong>único</strong>.</li></ol>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span>ANSI/SPARC: <strong>externo (vistas, varios)</strong> → <strong>conceptual (global, único)</strong> → <strong>interno (físico, único)</strong>. La correspondencia entre esquemas se llama <em>mapping</em>. Es muy típico preguntar cuántos esquemas hay de cada tipo: <strong>varios externos, un conceptual, un interno</strong>.</div>
+<h3>1.3. Independencia de datos</h3>
+<p>La arquitectura de tres esquemas hace posible la <strong>independencia de datos</strong>: la capacidad de modificar el esquema de un nivel sin tener que alterar el del nivel superior. [DATE] Hay dos tipos:</p>
+<ul><li><strong>Independencia física</strong>: se puede cambiar el <strong>esquema interno</strong> (reorganizar ficheros, añadir un índice, cambiar de disco) sin modificar el esquema conceptual ni las aplicaciones. Es la más fácil de lograr.</li><li><strong>Independencia lógica</strong>: se puede cambiar el <strong>esquema conceptual</strong> (añadir una entidad o un atributo) sin modificar los esquemas externos ni reescribir las aplicaciones que no usan ese cambio. Es más difícil, porque las vistas dependen del esquema conceptual.</li></ul>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span><strong>Física</strong> = aísla el conceptual de cambios en el almacenamiento. <strong>Lógica</strong> = aísla las vistas/aplicaciones de cambios en el esquema conceptual. La independencia lógica es la <strong>más difícil</strong> de conseguir.</div>
+<h3>1.4. El modelo de dominio y el modelo conceptual de datos</h3>
+<p>El <strong>modelo de dominio</strong> (o modelo del <em>universo del discurso</em>) captura los conceptos del negocio y sus relaciones tal como existen en la realidad, <strong>antes</strong> de pensar en la solución informática. El <strong>modelo conceptual de datos</strong> es la formalización de ese dominio en términos de <strong>entidades, atributos y relaciones</strong>, usando una técnica como el E-R. [CHEN]</p>
+<p>Sus características fundamentales son:</p>
+<ul><li><strong>Independencia tecnológica</strong>: no presupone ningún SGBD ni lenguaje.</li><li><strong>Expresividad semántica</strong>: refleja el significado del negocio, no detalles técnicos.</li><li><strong>Validable por el usuario</strong>: un experto del dominio (no informático) debe poder entenderlo y confirmarlo.</li><li><strong>Estable</strong>: cambia solo si cambia el negocio, no si cambia la tecnología.</li></ul>
+<div class="callout ayto"><span class="kicker">EJEMPLO AYTO MADRID</span>El modelo de dominio del <strong>Padrón Municipal de Habitantes</strong> identifica conceptos como <em>Habitante</em>, <em>Vivienda</em>, <em>Vía</em> (calle del callejero), <em>Distrito</em> y <em>Barrio</em>, y relaciones como «un habitante <em>está empadronado en</em> una vivienda» o «una vía <em>pertenece a</em> un distrito». Esto se decide con los técnicos de Estadística del Ayuntamiento, <strong>sin</strong> hablar todavía de tablas ni de Oracle: es modelado conceptual puro.</div>
+<h3>1.5. Técnicas y tipos de modelado: estático, dinámico y funcional</h3>
+<p>Un sistema de información se describe desde <strong>tres perspectivas complementarias</strong>, cada una con su técnica de diagramado. Esta clasificación (heredada del análisis estructurado y de OMT) vertebra todo el tema: [RUMBAUGH][YOURDON]</p>
+<table><thead><tr><th>Perspectiva</th><th>Pregunta que responde</th><th>Técnica clásica</th><th>Equivalente UML</th></tr></thead><tbody><tr><td><strong>Estática (datos)</strong></td><td>¿Qué datos hay y cómo se relacionan?</td><td>Modelo Entidad-Relación (E-R)</td><td>Diagrama de clases</td></tr><tr><td><strong>Dinámica (comportamiento)</strong></td><td>¿Cómo cambia de estado el sistema ante los eventos?</td><td>Diagrama de Transición de Estados (DTE)</td><td>Diagrama de estados</td></tr><tr><td><strong>Funcional (procesos)</strong></td><td>¿Qué transformaciones sufren los datos al fluir?</td><td>Diagrama de Flujo de Datos (DFD)</td><td>Diagrama de actividad</td></tr></tbody></table>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span>Memoriza la terna: <strong>estático → E-R</strong>, <strong>dinámico → DTE</strong>, <strong>funcional → DFD</strong>. El enunciado oficial del tema recorre exactamente estas tres vistas más los <strong>flujogramas</strong> (que detallan la lógica de un proceso).</div>
+<hr>
+<h2>2. Modelado estático: el modelo Entidad-Relación (E-R)</h2>
+<h3>2.1. Origen y propósito</h3>
+<p>El <strong>modelo Entidad-Relación</strong> fue propuesto por <strong>Peter Chen en 1976</strong> como una vista unificada de los datos, independiente de su implementación. [CHEN] Es el estándar <em>de facto</em> para el <strong>diseño conceptual</strong> de bases de datos: representa la realidad mediante tres construcciones básicas —<strong>entidades</strong>, <strong>atributos</strong> y <strong>relaciones (interrelaciones)</strong>— y un diagrama legible llamado <strong>diagrama entidad-relación (DER)</strong>.</p>
+<h3>2.2. Entidades</h3>
+<p>Una <strong>entidad</strong> es un objeto del mundo real, concreto o abstracto, con existencia propia y distinguible de los demás, sobre el que se quiere almacenar información. [ELMASRI, cap. 3] Hay que distinguir:</p>
+<ul><li><strong>Tipo de entidad</strong> (o entidad, en sentido genérico): la <em>plantilla</em> o categoría, p. ej. <code>HABITANTE</code>. En el diagrama es un <strong>rectángulo</strong>.</li><li><strong>Ocurrencia</strong> (o instancia, ejemplar): un elemento concreto de ese tipo, p. ej. el habitante con DNI 50.123.456-X. Las ocurrencias <strong>no</strong> se dibujan; pueblan la base de datos.</li></ul>
+<p>Según su dependencia de existencia, las entidades se clasifican en:</p>
+<ul><li><strong>Entidad fuerte (regular)</strong>: tiene existencia propia y un identificador (clave) formado por sus propios atributos. P. ej. <code>HABITANTE</code>.</li><li><strong>Entidad débil</strong>: su existencia depende de otra entidad (la <em>propietaria</em> o <em>fuerte</em>) y <strong>no</strong> puede identificarse solo con sus atributos; necesita la clave de la entidad fuerte más un <strong>discriminante</strong> (clave parcial). En el diagrama es un <strong>rectángulo doble</strong>. P. ej. <code>VOLUMEN_EXPEDIENTE</code> depende de <code>EXPEDIENTE</code>.</li></ul>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span><strong>Entidad fuerte</strong>: se identifica sola (rectángulo simple). <strong>Entidad débil</strong>: depende de otra y se identifica con la clave ajena + un discriminante propio (rectángulo doble; la relación que la liga es una <em>relación identificadora</em>, en rombo doble).</div>
+<h3>2.3. Atributos</h3>
+<p>Un <strong>atributo</strong> es una propiedad o característica de una entidad (o de una relación) que interesa almacenar. [CHEN] En notación de Chen se dibuja como una <strong>elipse</strong> unida a su entidad. El conjunto de valores válidos de un atributo es su <strong>dominio</strong> (p. ej. el dominio de <em>sexo</em> es {H, M}). [ISO11404] Tipos de atributos:</p>
+<ul><li><strong>Simple (atómico)</strong> vs <strong>compuesto</strong>: el compuesto se descompone en partes con significado propio. P. ej. <code>domicilio</code> = (vía, número, planta, puerta, código postal).</li><li><strong>Monovaluado</strong> vs <strong>multivaluado</strong>: el multivaluado puede tomar varios valores para una misma ocurrencia. P. ej. <code>teléfono</code> (varios). Se dibuja con <strong>elipse doble</strong>.</li><li><strong>Almacenado</strong> vs <strong>derivado (calculado)</strong>: el derivado se obtiene de otros. P. ej. <code>edad</code> se deriva de <code>fecha_nacimiento</code>. Se dibuja con <strong>elipse de línea discontinua</strong>.</li><li><strong>Identificador (clave)</strong>: atributo o conjunto de atributos cuyo valor identifica unívocamente cada ocurrencia. Se <strong>subraya</strong>. Puede haber varias claves candidatas; se elige una <strong>clave primaria</strong>.</li></ul>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span>Representación en Chen: atributo = elipse; <strong>clave = subrayado</strong>; <strong>multivaluado = elipse doble</strong>; <strong>derivado = elipse discontinua</strong>; <strong>compuesto = elipse con elipses hijas</strong>. Esta «iconografía» se pregunta literalmente.</div>
+<div class="callout ayto"><span class="kicker">EJEMPLO AYTO MADRID</span>En <code>HABITANTE</code>, el atributo identificador es el <strong>DNI/NIE</strong> (subrayado); <code>nombre_completo</code> es <strong>compuesto</strong> (nombre + apellidos); <code>teléfono_contacto</code> puede ser <strong>multivaluado</strong>; y <code>edad</code> es <strong>derivada</strong> de la fecha de nacimiento (no se almacena, se calcula).</div>
+<h3>2.4. Relaciones: grado, cardinalidad y participación</h3>
+<p>Una <strong>relación (interrelación)</strong> es una asociación con significado entre dos o más entidades. [CHEN] En notación de Chen se dibuja como un <strong>rombo</strong> que une las entidades participantes. Una relación también puede tener atributos propios (p. ej. <code>fecha</code> en la relación <code>EMPADRONADO_EN</code>). Tres propiedades caracterizan una relación:</p>
+<p><strong>a) Grado</strong>: número de tipos de entidad que participan.</p>
+<ul><li><strong>Unaria (recursiva)</strong>: una entidad se relaciona consigo misma. P. ej. <code>EMPLEADO supervisa a EMPLEADO</code>.</li><li><strong>Binaria</strong>: dos entidades (el caso más frecuente).</li><li><strong>Ternaria</strong>: tres entidades. P. ej. <code>PROVEEDOR – PROYECTO – PIEZA</code>.</li></ul>
+<p><strong>b) Cardinalidad (razón de cardinalidad)</strong>: número máximo de ocurrencias de una entidad que pueden asociarse a una ocurrencia de la otra. En relaciones binarias:</p>
+<ul><li><strong>Uno a uno (1:1)</strong>: cada ocurrencia de A se asocia con una de B y viceversa.</li><li><strong>Uno a muchos (1:N)</strong>: una ocurrencia de A se asocia con varias de B, pero cada B con una sola A.</li><li><strong>Muchos a muchos (N:M)</strong>: una ocurrencia de A se asocia con varias de B y viceversa.</li></ul>
+<p><strong>c) Participación (cardinalidad mínima)</strong>: indica si la participación de una entidad en la relación es obligatoria u opcional.</p>
+<ul><li><strong>Total (obligatoria)</strong>: toda ocurrencia de la entidad debe participar en la relación (mínimo 1). Se dibuja con <strong>línea doble</strong> en Chen.</li><li><strong>Parcial (opcional)</strong>: alguna ocurrencia puede no participar (mínimo 0).</li></ul>
+<p>La notación <strong>(mín, máx)</strong> combina ambas: junto a cada entidad se anota el par cardinalidad mínima y máxima de sus ocurrencias en la relación. P. ej. <code>(1,1)</code> o <code>(0,N)</code>.</p>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span>No confundir <strong>cardinalidad máxima</strong> (1:1, 1:N, N:M → <em>cuántas</em> como tope) con <strong>participación o cardinalidad mínima</strong> (total/parcial → <em>si es obligatoria</em>). La notación (mín, máx) reúne las dos. Cuidado: la posición de la etiqueta (mín,máx) varía entre escuelas (Chen la pone <em>cruzada</em>, MÉTRICA la pone <em>del lado de la entidad</em>); en el examen suele especificarse.</div>
+<div class="callout ejercicio"><span class="kicker">EJERCICIO RESUELTO</span><em>Modela: «Un distrito tiene muchos barrios; cada barrio pertenece a un único distrito; todo barrio pertenece obligatoriamente a un distrito y todo distrito tiene al menos un barrio».</em> Entidades: <code>DISTRITO</code>, <code>BARRIO</code>. Relación: <code>CONTIENE</code> (rombo). Cardinalidad: <strong>1:N</strong> (un distrito, muchos barrios). Participación: <strong>total en ambos lados</strong> (todo barrio tiene distrito → total en BARRIO; todo distrito tiene ≥1 barrio → total en DISTRITO). En notación (mín,máx): DISTRITO <code>(1,N)</code>, BARRIO <code>(1,1)</code>.</div>
+<h3>2.5. Reglas de modelización y construcción del diagrama E-R</h3>
+<p>Construir un buen modelo E-R sigue un proceso y unas reglas heurísticas: [ELMASRI, cap. 3][METRICA3]</p>
+<ol><li><strong>Identificar las entidades</strong> a partir de los sustantivos relevantes del dominio (objetos sobre los que se guarda información). Descartar los que sean realmente atributos.</li><li><strong>Identificar las relaciones</strong> a partir de los verbos que conectan entidades.</li><li><strong>Asignar los atributos</strong> a la entidad o relación a la que pertenecen; elegir el <strong>identificador</strong> de cada entidad.</li><li><strong>Determinar grado, cardinalidad y participación</strong> de cada relación.</li><li><strong>Detectar entidades débiles</strong> y sus relaciones identificadoras.</li><li><strong>Aplicar generalización/especialización</strong> cuando haya entidades con atributos comunes y específicos.</li><li><strong>Revisar y validar</strong> con el usuario; eliminar redundancias.</li></ol>
+<p>Reglas de buena construcción (errores típicos a evitar):</p>
+<ul><li>Un <strong>atributo no debe modelarse como entidad</strong> salvo que tenga atributos propios o participe en relaciones (p. ej. <code>color</code> es atributo, pero <code>MARCA</code> con sus propios datos es entidad).</li><li>Evitar <strong>relaciones redundantes</strong> (una relación deducible de otras dos).</li><li>Un atributo que solo tiene sentido para la combinación de dos entidades pertenece a la <strong>relación</strong>, no a una entidad.</li><li>Nombrar entidades en <strong>singular</strong> y relaciones con un <strong>verbo</strong>.</li></ul>
+<h3>2.6. Técnicas de descomposición: generalización/especialización, agregación y asociación</h3>
+<p>El <strong>modelo E-R extendido (EER)</strong> añade construcciones semánticas para casos complejos: [ELMASRI, cap. 4]</p>
+<ul><li><strong>Generalización / Especialización (jerarquía «es-un», is-a)</strong>: una entidad <strong>supertipo</strong> agrupa atributos comunes y varias entidades <strong>subtipo</strong> añaden atributos específicos. <em>Especializar</em> es el proceso descendente (de lo general a lo particular); <em>generalizar</em>, el ascendente. P. ej. supertipo <code>PERSONAL</code>, subtipos <code>FUNCIONARIO</code> y <code>LABORAL</code>. Restricciones:<ul><li><strong>Disyunción</strong>: <em>disjunta</em> (un ejemplar pertenece a un solo subtipo) vs <em>solapada</em> (puede pertenecer a varios).</li><li><strong>Completitud</strong>: <em>total</em> (todo ejemplar del supertipo está en algún subtipo) vs <em>parcial</em>.</li></ul></li><li><strong>Agregación</strong>: trata una <strong>relación</strong> como si fuera una entidad de nivel superior para poder relacionarla con otra entidad (relación de relaciones). P. ej. la relación <code>TRABAJA_EN(EMPLEADO, PROYECTO)</code> se agrega para relacionarla con <code>MAQUINARIA</code>.</li><li><strong>Asociación</strong>: vínculo «parte-de» (composición/agregación en sentido UML) entre un todo y sus partes.</li></ul>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span><strong>Generalización/especialización</strong> = jerarquía <em>es-un</em> (herencia de atributos del supertipo). Atención a las dos parejas de restricciones: <strong>disjunta/solapada</strong> y <strong>total/parcial</strong>. La <strong>agregación</strong> del EER es «tratar una relación como entidad»; no confundir con la agregación de UML.</div>
+<div class="callout ref"><span class="kicker">REFERENCIA CRUZADA</span>La jerarquía de generalización/especialización del EER es el antecedente directo de la <strong>herencia</strong> en la <strong>Programación Orientada a Objetos</strong> (Tema 20). Un supertipo E-R ↔ una superclase; un subtipo ↔ una subclase que hereda y extiende.</div>
+<h3>2.7. Notaciones: Chen, pata de gallo y UML</h3>
+<p>La misma semántica E-R se dibuja con notaciones distintas; conviene reconocerlas todas: [SILBERSCHATZ][MARTIN]</p>
+<ul><li><strong>Chen (1976)</strong>: entidades en rectángulo, atributos en elipse, relaciones en rombo. Muy expresiva pero ocupa mucho espacio. La cardinalidad se anota con <code>1</code>, <code>N</code>, <code>M</code> sobre las líneas.</li><li><strong>Pata de gallo (crow's foot, Information Engineering de Martin)</strong>: entidades en rectángulo con sus atributos dentro; las relaciones son líneas cuyos <strong>extremos</strong> codifican la cardinalidad con símbolos (una raya = uno; «pata de gallo» = muchos; círculo = opcional/cero). Es la más usada en herramientas CASE.</li><li><strong>UML (diagrama de clases)</strong>: las entidades son <strong>clases</strong> (rectángulo con compartimentos), las relaciones son <strong>asociaciones</strong> con <strong>multiplicidad</strong> <code>1</code>, <code>0..1</code>, <code>1..<em></code>, <code></em></code>. La generalización usa el triángulo de herencia. [UML]</li></ul>
+<table><thead><tr><th>Concepto E-R</th><th>Chen</th><th>Pata de gallo</th><th>UML</th></tr></thead><tbody><tr><td>Entidad</td><td>Rectángulo</td><td>Rectángulo con campos</td><td>Clase</td></tr><tr><td>Atributo</td><td>Elipse</td><td>Línea dentro del rectángulo</td><td>Atributo de clase</td></tr><tr><td>Relación</td><td>Rombo</td><td>Línea con extremos</td><td>Asociación</td></tr><tr><td>Cardinalidad N:M</td><td><code>N</code>…<code>M</code> sobre líneas</td><td>doble pata de gallo</td><td><code><em></code>…<code></em></code></td></tr><tr><td>Generalización</td><td>Triángulo/«ISA»</td><td>—</td><td>Triángulo de herencia</td></tr></tbody></table>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span>En <strong>pata de gallo</strong>, los símbolos se leen <em>junto a la entidad del extremo</em>: «||» = uno y solo uno; «o&lt;» = cero o muchos; «|&lt;» = uno o muchos. Es la notación que generan casi todas las herramientas (ERwin, MySQL Workbench…). UML usa <strong>multiplicidad</strong> numérica (<code>0..1</code>, <code>1..*</code>).</div>
+<h3>2.8. Del modelo E-R al modelo relacional</h3>
+<p>El modelo conceptual E-R se <strong>transforma</strong> en un modelo lógico relacional siguiendo reglas mecánicas (este paso pertenece al diseño lógico, Tema 17, pero conviene conocerlo): [ELMASRI, cap. 9][CODD]</p>
+<ul><li>Cada <strong>entidad</strong> → una <strong>tabla (relación)</strong>; sus atributos → columnas; su identificador → <strong>clave primaria</strong>.</li><li>Relación <strong>1:N</strong> → la clave de la entidad del lado «1» se propaga como <strong>clave ajena</strong> a la tabla del lado «N».</li><li>Relación <strong>N:M</strong> → se crea una <strong>tabla intermedia</strong> cuya clave primaria es la combinación de las claves de ambas entidades (más los atributos propios de la relación).</li><li>Relación <strong>1:1</strong> → la clave ajena se coloca en cualquiera de las dos tablas (preferiblemente en la de participación total).</li><li>Atributo <strong>multivaluado</strong> → tabla aparte con la clave de la entidad + el valor.</li><li><strong>Entidad débil</strong> → tabla con la clave de la entidad fuerte + su discriminante como clave primaria compuesta.</li></ul>
+<div class="callout ref"><span class="kicker">REFERENCIA CRUZADA</span>Esta transformación es la entrada del <strong>Tema 17 (Diseño lógico y físico, modelo relacional y normalización)</strong>. El resultado se refina con las <strong>formas normales</strong> para eliminar redundancias y anomalías. El SQL que crea esas tablas es el <strong>Tema 19</strong>.</div>
+<hr>
+<h2>3. Modelado dinámico: el diagrama de transición de estados (DTE)</h2>
+<h3>3.1. Estados, transiciones, eventos, condiciones y acciones</h3>
+<p>El <strong>modelado dinámico</strong> describe el <strong>comportamiento</strong> del sistema a lo largo del tiempo: cómo reacciona ante los <strong>eventos</strong> y cómo va cambiando de <strong>estado</strong>. La técnica clásica es el <strong>diagrama de transición de estados (DTE)</strong>, una máquina de estados finita. [YOURDON][RUMBAUGH] Sus elementos:</p>
+<ul><li><strong>Estado</strong>: situación estable en la que se encuentra un objeto o el sistema durante un intervalo, esperando un evento. Se dibuja como un <strong>rectángulo redondeado</strong>. Hay un <strong>estado inicial</strong> (círculo relleno) y, opcionalmente, <strong>estados finales</strong> (círculo con borde).</li><li><strong>Transición</strong>: paso de un estado a otro. Se dibuja como una <strong>flecha</strong> etiquetada.</li><li><strong>Evento (suceso)</strong>: estímulo que dispara una transición (la llegada de un dato, una acción del usuario, el vencimiento de un plazo).</li><li><strong>Condición (guarda)</strong>: predicado que debe cumplirse para que la transición ocurra. Se escribe entre corchetes <code>[condición]</code>.</li><li><strong>Acción</strong>: operación que se ejecuta al producirse la transición (o al entrar/salir de un estado).</li></ul>
+<p>La etiqueta de una transición sigue el patrón <strong><code>evento [condición] / acción</code></strong>.</p>
+<div class="callout ayto"><span class="kicker">EJEMPLO AYTO MADRID</span>El ciclo de vida de un <strong>expediente administrativo</strong> en la sede electrónica es un DTE natural: estados <code>INICIADO</code> → <code>EN_TRAMITACIÓN</code> → <code>PENDIENTE_SUBSANACIÓN</code> → <code>RESUELTO</code> → <code>NOTIFICADO</code> → <code>ARCHIVADO</code>. El evento «presentar alegación» con condición <code>[plazo abierto]</code> dispara la transición a <code>EN_TRAMITACIÓN</code>; la acción asociada es «registrar entrada».</div>
+<h3>3.2. Reglas de construcción del DTE</h3>
+<ul><li>Todo diagrama tiene <strong>un único estado inicial</strong> y puede tener varios finales.</li><li>Cada <strong>transición</strong> parte de un estado y llega a un estado (posiblemente el mismo: <em>autotransición</em>).</li><li>Una transición se etiqueta con el <strong>evento</strong> que la dispara; sin evento no hay cambio de estado.</li><li>Los estados deben ser <strong>mutuamente excluyentes</strong>: el sistema está en uno y solo uno en cada instante.</li><li>No deben existir <strong>estados inalcanzables</strong> (sin transición de entrada) ni <strong>callejones sin salida</strong> no deseados (estados sin salida que no sean finales).</li></ul>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span>En un DTE/máquina de estados: <strong>un estado inicial</strong>, <strong>estados mutuamente excluyentes</strong>, <strong>transiciones disparadas por eventos</strong>. Etiqueta de transición: <code>evento [guarda] / acción</code>. Las autotransiciones (vuelven al mismo estado) son válidas.</div>
+<h3>3.3. Equivalencia con las máquinas de estados y UML</h3>
+<p>El DTE clásico equivale a una <strong>máquina de estados finita</strong>. UML lo recoge y amplía en el <strong>diagrama de estados (state machine diagram)</strong>, que añade: estados compuestos (anidados), regiones concurrentes, acciones de entrada/salida (<code>entry/</code>, <code>exit/</code>), actividades internas (<code>do/</code>) y pseudoestados (histórico, unión, decisión). [UML][FOWLER]</p>
+<div class="callout ref"><span class="kicker">REFERENCIA CRUZADA</span>Las máquinas de estados son también la base de muchos <strong>algoritmos</strong> (Tema 13) y del análisis léxico de <strong>lenguajes</strong> (Tema 18). Un autómata finito determinista es, formalmente, un DTE sin acciones.</div>
+<hr>
+<h2>4. Modelado funcional: el diagrama de flujo de datos (DFD)</h2>
+<h3>4.1. Componentes del DFD</h3>
+<p>El <strong>diagrama de flujo de datos (DFD)</strong> modela el sistema como una <strong>red de procesos</strong> que transforman datos, mostrando <em>qué</em> hace el sistema con la información (no <em>cómo</em> ni <em>cuándo</em>). Es la herramienta central del <strong>análisis estructurado</strong> de DeMarco, Yourdon y Gane/Sarson. [DEMARCO][YOURDON] Tiene <strong>cuatro</strong> elementos:</p>
+<ol><li><strong>Proceso (función, burbuja)</strong>: transforma flujos de datos de entrada en flujos de salida. Se dibuja como <strong>círculo</strong> (Yourdon/DeMarco) o <strong>rectángulo redondeado</strong> (Gane/Sarson). Se numera (1, 2, 3…). El nombre es un <strong>verbo + objeto</strong> («Validar solicitud»).</li><li><strong>Flujo de datos</strong>: dato en movimiento entre componentes. Se dibuja como una <strong>flecha</strong> etiquetada con el nombre del dato.</li><li><strong>Almacén de datos (data store)</strong>: dato en reposo (un fichero, una tabla, un archivo). Se dibuja como <strong>dos líneas paralelas</strong> (Yourdon) o un rectángulo abierto (Gane/Sarson). Se numera con D1, D2…</li><li><strong>Entidad externa (origen/destino, terminador)</strong>: persona, organización u otro sistema, <strong>externo</strong> al ámbito modelado, que produce o consume datos. Se dibuja como un <strong>rectángulo</strong>.</li></ol>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span>Los <strong>cuatro</strong> componentes del DFD: <strong>proceso</strong> (transforma), <strong>flujo</strong> (dato en movimiento), <strong>almacén</strong> (dato en reposo) y <strong>entidad externa</strong> (frontera del sistema). Es la pregunta más repetida del epígrafe. El DFD modela <em>función</em>, <strong>no</strong> secuencia temporal ni decisiones (eso es el flujograma).</div>
+<h3>4.2. Reglas de construcción del DFD</h3>
+<p>El análisis estructurado fija reglas estrictas de buena formación: [DEMARCO][GANE-SARSON]</p>
+<ul><li><strong>Conservación de datos</strong>: un proceso no puede generar de la nada datos de salida que no se deriven de sus entradas, ni «tragarse» entradas sin producir salida.</li><li><strong>Un flujo siempre toca al menos un proceso</strong>: están <strong>prohibidos</strong> los flujos directos entre dos almacenes, entre dos entidades externas, o entre una entidad externa y un almacén. Todo dato debe pasar por un proceso.</li><li><strong>Procesos con entrada y salida</strong>: un proceso solo con entradas es un <em>sumidero</em> erróneo («agujero negro»); solo con salidas, una <em>fuente</em> imposible («milagro»).</li><li><strong>Nombres significativos</strong>: procesos con verbo; flujos y almacenes con sustantivo.</li><li><strong>Numeración jerárquica</strong> de los procesos para soportar la descomposición.</li></ul>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span>Reglas «negativas» del DFD que más se preguntan: <strong>no</strong> hay flujo directo almacén↔almacén, entidad↔entidad, ni entidad↔almacén; <strong>siempre</strong> media un proceso. Y todo proceso debe tener <strong>al menos una entrada y una salida</strong> (ni «agujero negro» ni «milagro»).</div>
+<h3>4.3. Descomposición en niveles</h3>
+<p>Un sistema real no cabe en un solo diagrama. El DFD se construye <strong>por niveles</strong>, mediante <strong>descomposición funcional descendente</strong> (top-down), explotando cada proceso en un diagrama más detallado: [DEMARCO][YOURDON]</p>
+<ul><li><strong>Nivel 0 — Diagrama de contexto</strong>: un <strong>único proceso</strong> (la «burbuja 0») que representa <strong>todo el sistema</strong>, rodeado de las <strong>entidades externas</strong> y los flujos que cruzan la frontera. No tiene almacenes visibles. Define el <strong>alcance</strong> del sistema.</li><li><strong>Nivel 1 — Diagrama de sistema</strong>: explota el proceso 0 en los <strong>procesos principales</strong> (1, 2, 3…), mostrando ya los almacenes internos.</li><li><strong>Niveles 2, 3… — Explosión</strong>: cada proceso <code>n</code> se descompone en subprocesos <code>n.1</code>, <code>n.2</code>… hasta llegar a procesos <strong>elementales</strong> (primitivas funcionales) que ya no se descomponen y se describen con una <em>mini-spec</em>.</li></ul>
+<p>La regla que garantiza la coherencia entre niveles es el <strong>equilibrado (balanceo)</strong>: los flujos de entrada y salida de un proceso deben <strong>coincidir</strong> con los flujos que cruzan la frontera de su diagrama hijo (explosión). Si un proceso recibe <code>A</code> y produce <code>B</code>, su diagrama de descomposición debe tener exactamente <code>A</code> entrando y <code>B</code> saliendo.</p>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span><strong>Diagrama de contexto = nivel 0 = una sola burbuja + entidades externas, sin almacenes.</strong> La descomposición numera <code>1</code> → <code>1.1</code>, <code>1.2</code>… El <strong>equilibrado/balanceo</strong> exige que los flujos del proceso padre = flujos frontera del diagrama hijo. Un proceso que ya no se descompone es una <strong>primitiva funcional</strong>.</div>
+<div class="callout ejercicio"><span class="kicker">EJERCICIO RESUELTO</span><em>Sitúa por niveles el sistema de «Gestión de tributos municipales».</em> <strong>Nivel 0 (contexto)</strong>: burbuja «0 · Gestión de tributos» con entidades externas <code>CONTRIBUYENTE</code>, <code>ENTIDAD_BANCARIA</code> y <code>PADRÓN</code> (otro sistema). Flujos: «declaración», «recibo», «cobro». <strong>Nivel 1</strong>: procesos «1 Liquidar tributo», «2 Emitir recibo», «3 Registrar cobro», con almacenes <code>D1 Liquidaciones</code>, <code>D2 Cobros</code>. <strong>Nivel 2</strong>: «1 Liquidar tributo» se explota en «1.1 Calcular base imponible», «1.2 Aplicar tipo», «1.3 Generar liquidación». Se comprueba el <strong>equilibrado</strong>: los flujos que entran/salen de «1» en el nivel 1 son los mismos que cruzan la frontera del diagrama 1.x.</div>
+<h3>4.4. Diccionario de datos y especificación de procesos</h3>
+<p>El DFD se acompaña de dos artefactos que completan el modelo funcional: [DEMARCO]</p>
+<ul><li><strong>Diccionario de datos (DD)</strong>: repositorio que <strong>define</strong> rigurosamente cada flujo, almacén y dato elemental del DFD, usando una notación de composición:<ul><li><code>=</code> (se compone de), <code>+</code> (y/concatenación), <code>{ }</code> (iteración/repetición), <code>[ | ]</code> (selección/alternativa), <code>( )</code> (opcional).</li><li>P. ej.: <code>solicitud = nº_registro + fecha + datos_solicitante + [presencial | telemática]</code>.</li></ul></li><li><strong>Especificación de procesos (mini-spec o P-SPEC)</strong>: describe la <strong>lógica</strong> de cada proceso <strong>primitivo</strong> (los que ya no se descomponen), mediante <strong>pseudocódigo</strong>, <strong>tablas de decisión</strong> o <strong>lenguaje estructurado</strong>. Aquí es donde el modelado funcional enlaza con los <strong>flujogramas</strong>.</li></ul>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span>El <strong>diccionario de datos</strong> define los datos (con <code>= + { } [ ] ( )</code>); la <strong>mini-spec</strong> define la lógica de los procesos primitivos. Juntos, DFD + DD + mini-specs forman el <strong>modelo de procesos</strong> completo del análisis estructurado.</div>
+<h3>4.5. Notaciones: Yourdon/DeMarco frente a Gane/Sarson</h3>
+<table><thead><tr><th>Componente</th><th>Yourdon / DeMarco</th><th>Gane / Sarson</th></tr></thead><tbody><tr><td>Proceso</td><td>Círculo (burbuja)</td><td>Rectángulo de esquinas redondeadas</td></tr><tr><td>Flujo de datos</td><td>Flecha curva</td><td>Flecha recta</td></tr><tr><td>Almacén</td><td>Dos líneas paralelas abiertas</td><td>Rectángulo abierto por la derecha</td></tr><tr><td>Entidad externa</td><td>Rectángulo</td><td>Rectángulo (a veces con sombra)</td></tr></tbody></table>
+<p>Ambas notaciones son <strong>semánticamente equivalentes</strong>; la elección es de estilo o de la herramienta CASE. En UML, el papel del DFD lo cubre parcialmente el <strong>diagrama de actividad</strong> (flujo de acciones y objetos). [UML]</p>
+<div class="callout ref"><span class="kicker">REFERENCIA CRUZADA</span>El DFD describe <em>qué</em> hace el sistema con los datos; las estructuras de esos datos en reposo (los almacenes) se diseñan con el <strong>modelo E-R</strong> (§2) y acaban en un <strong>SGBD</strong> (Tema 15). DFD (procesos) y E-R (datos) son las dos caras del análisis estructurado.</div>
+<hr>
+<h2>5. Flujogramas, reglas de construcción y UML</h2>
+<h3>5.1. Concepto y propósito del flujograma</h3>
+<p>Un <strong>flujograma</strong> (diagrama de flujo, <em>flowchart</em>) es la representación gráfica de la <strong>secuencia lógica de pasos</strong> de un proceso o algoritmo, mostrando el <strong>orden de ejecución</strong> y las <strong>decisiones</strong>. A diferencia del DFD (que muestra <em>transformaciones</em> de datos sin orden temporal), el flujograma sí refleja la <strong>secuencia y el control</strong> del flujo. [ISO5807] Se usa para documentar algoritmos, procedimientos administrativos y la lógica de los procesos primitivos de un DFD.</p>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span><strong>DFD ≠ flujograma.</strong> El DFD modela el <strong>flujo de datos</strong> (qué se transforma) sin secuencia temporal; el <strong>flujograma</strong> modela el <strong>flujo de control</strong> (en qué orden, con qué decisiones). Es una distinción que el examen busca confundir.</div>
+<h3>5.2. Símbolos normalizados (ISO 5807 / ANSI)</h3>
+<p>La norma <strong>ISO 5807:1985</strong> (heredera de ANSI X3.5) normaliza los símbolos del flujograma: [ISO5807][ANSI-X3.5]</p>
+<table><thead><tr><th>Símbolo</th><th>Forma</th><th>Significado</th></tr></thead><tbody><tr><td><strong>Terminal</strong></td><td>Óvalo / rectángulo redondeado</td><td>Inicio y fin del proceso</td></tr><tr><td><strong>Proceso</strong></td><td>Rectángulo</td><td>Operación o acción (asignación, cálculo)</td></tr><tr><td><strong>Decisión</strong></td><td>Rombo</td><td>Bifurcación según una condición (sí/no)</td></tr><tr><td><strong>Entrada/Salida</strong></td><td>Romboide (paralelogramo)</td><td>Lectura o escritura de datos</td></tr><tr><td><strong>Subrutina</strong></td><td>Rectángulo con doble borde lateral</td><td>Llamada a un proceso predefinido</td></tr><tr><td><strong>Conector</strong></td><td>Círculo pequeño</td><td>Une partes del diagrama (misma página)</td></tr><tr><td><strong>Conector de página</strong></td><td>Pentágono</td><td>Une partes en distinta página</td></tr><tr><td><strong>Línea de flujo</strong></td><td>Flecha</td><td>Sentido del flujo (por defecto, arriba→abajo, izq→der)</td></tr></tbody></table>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span>Memoriza los tres símbolos básicos: <strong>óvalo = inicio/fin (terminal)</strong>, <strong>rectángulo = proceso</strong>, <strong>rombo = decisión</strong>. El <strong>romboide/paralelogramo = entrada/salida</strong>. El rombo es el único con <strong>varias salidas</strong> (las ramas de la condición).</div>
+<h3>5.3. Estructuras básicas: secuencia, selección e iteración</h3>
+<p>El <strong>teorema de Böhm-Jacopini (1966)</strong> demuestra que cualquier algoritmo puede expresarse combinando <strong>solo tres estructuras de control</strong>, sin saltos incondicionales (<em>goto</em>). Es el fundamento de la <strong>programación estructurada</strong>: [BOHM-JACOPINI]</p>
+<ol><li><strong>Secuencia</strong>: una acción tras otra, en orden.</li><li><strong>Selección (condicional)</strong>: se elige una rama u otra según una condición (<code>si-entonces-si_no</code>; en el flujograma, un <strong>rombo</strong>). Variante múltiple: <code>según</code> (switch/case).</li><li><strong>Iteración (bucle)</strong>: se repite un bloque mientras se cumple una condición. Dos formas:</li></ol>
+<ul><li><strong>Mientras</strong> (<code>while</code>): la condición se evalúa <strong>antes</strong> (puede no ejecutarse ninguna vez).</li><li><strong>Repetir-hasta</strong> (<code>do-until</code>): la condición se evalúa <strong>después</strong> (se ejecuta al menos una vez).</li></ul>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span>Las <strong>tres</strong> estructuras de la programación estructurada (Böhm-Jacopini): <strong>secuencia, selección e iteración</strong>. La diferencia clave de los bucles: <strong>mientras</strong> comprueba <em>antes</em> (0 o más veces); <strong>repetir-hasta</strong> comprueba <em>después</em> (1 o más veces). Programación estructurada = <strong>sin <code>goto</code></strong>.</div>
+<div class="callout ref"><span class="kicker">REFERENCIA CRUZADA</span>Estas estructuras de control (condicionales, bucles, recursividad) son el núcleo del <strong>Tema 18 (Lenguajes de programación)</strong>. El flujograma es la representación gráfica de lo que en el Tema 18 se escribe como código.</div>
+<h3>5.4. Reglas de construcción del flujograma</h3>
+<ul><li><strong>Un único inicio y, preferiblemente, un único fin</strong> (terminales).</li><li>El flujo va, por convención, de <strong>arriba abajo</strong> y de <strong>izquierda a derecha</strong>; las flechas explicitan cualquier otro sentido.</li><li>De un símbolo de <strong>proceso</strong> sale <strong>una sola</strong> línea; de un <strong>rombo (decisión)</strong> salen <strong>dos o más</strong> (etiquetadas con la condición: «Sí»/«No»).</li><li>Las líneas de flujo <strong>no deben cruzarse</strong> si puede evitarse; usar <strong>conectores</strong> para saltos.</li><li>Cada camino debe conducir finalmente a un <strong>terminal de fin</strong> (no debe haber caminos «perdidos»).</li><li>Evitar <code>goto</code>/saltos arbitrarios: ceñirse a las tres estructuras básicas (flujograma <strong>estructurado</strong>).</li></ul>
+<div class="callout ejercicio"><span class="kicker">EJERCICIO RESUELTO</span><em>Flujograma de «validar si un habitante es mayor de edad».</em> <code>Inicio</code> (óvalo) → <code>Leer fecha_nacimiento</code> (romboide E/S) → <code>Calcular edad</code> (rectángulo) → <code>¿edad ≥ 18?</code> (rombo): rama <strong>Sí</strong> → <code>Mostrar "Mayor de edad"</code>; rama <strong>No</strong> → <code>Mostrar "Menor de edad"</code>; ambas → <code>Fin</code> (óvalo). Es una <strong>selección</strong> simple con un solo punto de fin.</div>
+<h3>5.5. Ordinograma, organigrama y pseudocódigo</h3>
+<p>En la tradición española conviene distinguir términos próximos: [METRICA3]</p>
+<ul><li><strong>Organigrama (de proceso / del sistema)</strong>: diagrama de <strong>alto nivel</strong> que muestra los grandes módulos o unidades y su relación (no el detalle del algoritmo). <em>No confundir</em> con el organigrama de una organización (estructura jerárquica de cargos).</li><li><strong>Ordinograma (flujograma de detalle)</strong>: el diagrama de flujo <strong>detallado</strong> de la lógica de un programa, con las estructuras de control. Es el flujograma «de programación» propiamente dicho.</li><li><strong>Pseudocódigo</strong>: descripción textual del algoritmo en lenguaje estructurado (cercano al lenguaje natural pero con <code>si/mientras/para</code>), equivalente al ordinograma pero sin dibujo. Es la alternativa de la <strong>mini-spec</strong> del DFD.</li></ul>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span><strong>Organigrama</strong> = visión de <strong>conjunto/módulos</strong> (qué partes hay). <strong>Ordinograma</strong> = <strong>detalle</strong> del algoritmo (cómo funciona por dentro). El <strong>pseudocódigo</strong> es la versión textual del ordinograma. Esta terna se pregunta en oposiciones españolas con frecuencia.</div>
+<h3>5.6. UML: panorama de los tipos de diagramas</h3>
+<p>El <strong>Lenguaje Unificado de Modelado (UML)</strong>, estandarizado por la OMG, unifica las técnicas anteriores en una notación única orientada a objetos. UML 2.5 define <strong>14 tipos de diagramas</strong> en dos grandes familias: [UML][FOWLER]</p>
+<ul><li><strong>Diagramas de estructura</strong> (vista estática): <strong>clases</strong>, objetos, componentes, despliegue, paquetes, estructura compuesta, perfiles. El <strong>diagrama de clases</strong> es el equivalente moderno del <strong>E-R</strong>.</li><li><strong>Diagramas de comportamiento</strong> (vista dinámica): <strong>casos de uso</strong>, <strong>actividad</strong>, <strong>estados (máquina de estados)</strong>, <strong>secuencia</strong>, comunicación, tiempos, visión global de interacción.<ul><li>El <strong>diagrama de estados</strong> equivale al <strong>DTE</strong> (§3).</li><li>El <strong>diagrama de actividad</strong> cubre el papel del <strong>flujograma</strong> y, en parte, del <strong>DFD</strong> (incluye flujos de control y de objetos, decisiones, bifurcaciones y <em>swimlanes</em>).</li><li>El <strong>diagrama de casos de uso</strong> captura los requisitos funcionales (actores y casos de uso), sin equivalente clásico directo.</li></ul></li></ul>
+<table><thead><tr><th>Técnica clásica</th><th>Vista</th><th>Equivalente UML</th></tr></thead><tbody><tr><td>Modelo E-R</td><td>Estática / datos</td><td>Diagrama de clases</td></tr><tr><td>DTE</td><td>Dinámica / comportamiento</td><td>Diagrama de estados</td></tr><tr><td>DFD / flujograma</td><td>Funcional / control</td><td>Diagrama de actividad</td></tr></tbody></table>
+<div class="callout dato"><span class="kicker">DATO CLAVE EXAMEN</span>UML 2.5 = <strong>14 diagramas</strong> en dos familias: <strong>estructura</strong> (estáticos; el de <strong>clases</strong> es el rey) y <strong>comportamiento</strong> (dinámicos; <strong>casos de uso, actividad, estados, secuencia</strong>). Equivalencias: <strong>E-R ↔ clases</strong>, <strong>DTE ↔ estados</strong>, <strong>flujograma/DFD ↔ actividad</strong>.</div>
+<div class="callout ref"><span class="kicker">REFERENCIA CRUZADA</span>UML, los <strong>patrones de diseño</strong> y la modelización orientada a objetos se desarrollan en el <strong>Tema 20 (Diseño y programación orientada a objetos)</strong>. Este tema cubre el modelado <em>conceptual y funcional</em>; el Tema 20, el modelado <em>orientado a objetos</em> y su implementación.</div>
+<hr>
+<h2>Resumen integrador</h2>
+<p>El Tema 16 recorre el <strong>modelado conceptual y funcional</strong> de un sistema de información en tres vistas complementarias —<strong>estática</strong> (E-R: entidades, atributos, relaciones, cardinalidades, jerarquías), <strong>dinámica</strong> (DTE: estados y transiciones) y <strong>funcional</strong> (DFD: procesos, flujos, almacenes y entidades externas, con descomposición por niveles y equilibrado)— más los <strong>flujogramas</strong> que detallan la lógica de control (símbolos ISO 5807; secuencia, selección e iteración de Böhm-Jacopini). Todo ello se enmarca en la <strong>arquitectura ANSI/SPARC</strong> (independencia de datos) y se cierra con <strong>UML</strong> como síntesis moderna (clases ↔ E-R, estados ↔ DTE, actividad ↔ DFD/flujograma). El modelo conceptual es el puente entre el análisis de requisitos y el <strong>diseño lógico relacional</strong> (Tema 17) sobre un <strong>SGBD</strong> (Tema 15).</p>
+</section><section id="tab-indice" class="tab-content">
+<hr>
+<h2>Estructura del tema</h2>
+<div class="indice-outline"><ol style="list-style:none"><li><strong>1. El modelado de sistemas de información</strong><ol style="list-style:none"><li>1.1. Concepto de modelo, dato y modelo de datos</li><li>1.2. Niveles de abstracción: arquitectura ANSI/SPARC (externo, conceptual, interno)</li><li>1.3. Independencia de datos (física y lógica)</li><li>1.4. El modelo de dominio y el modelo conceptual de datos</li><li>1.5. Técnicas y tipos de modelado: estático, dinámico y funcional</li></ol></li><li><strong>2. Modelado estático: el modelo Entidad-Relación (E-R)</strong><ol style="list-style:none"><li>2.1. Origen (Chen, 1976) y propósito del modelo E-R</li><li>2.2. Entidades: concepto, tipos (fuertes y débiles) y ocurrencias</li><li>2.3. Atributos: simples/compuestos, monovaluados/multivaluados, derivados e identificadores</li><li>2.4. Relaciones (interrelaciones): grado, cardinalidad y participación</li><li>2.5. Reglas de modelización y construcción del diagrama E-R</li><li>2.6. Técnicas de descomposición: generalización/especialización, agregación y asociación</li><li>2.7. Notaciones: Chen, pata de gallo (crow's foot) y UML</li><li>2.8. Del modelo E-R al modelo relacional (transformación)</li></ol></li><li><strong>3. Modelado dinámico: el diagrama de transición de estados (DTE)</strong><ol style="list-style:none"><li>3.1. Estados, transiciones, eventos, condiciones y acciones</li><li>3.2. Reglas de construcción del DTE</li><li>3.3. Equivalencia con las máquinas de estados y el diagrama de estados UML</li></ol></li><li><strong>4. Modelado funcional: el diagrama de flujo de datos (DFD)</strong><ol style="list-style:none"><li>4.1. Componentes: proceso, flujo de datos, almacén y entidad externa</li><li>4.2. Reglas de construcción del DFD</li><li>4.3. Descomposición en niveles: contexto (nivel 0), nivel 1, nivel N y equilibrado</li><li>4.4. Diccionario de datos y especificación de procesos (mini-spec)</li><li>4.5. Notaciones: Yourdon/DeMarco frente a Gane/Sarson</li></ol></li><li><strong>5. Flujogramas, reglas de construcción y UML</strong><ol style="list-style:none"><li>5.1. Concepto y propósito del flujograma (diagrama de flujo)</li><li>5.2. Símbolos normalizados (ISO 5807 / ANSI)</li><li>5.3. Estructuras básicas: secuencia, selección e iteración (programación estructurada)</li><li>5.4. Reglas de construcción del flujograma</li><li>5.5. Ordinograma, organigrama y pseudocódigo</li><li>5.6. UML: panorama de los tipos de diagramas (estructura y comportamiento)</li></ol></li></ol></div>
+<h2>Conceptos clave del tema</h2>
+<table><thead><tr><th>Concepto</th><th>Dónde se trata</th></tr></thead><tbody><tr><td>Arquitectura ANSI/SPARC (3 esquemas)</td><td>§1.2</td></tr><tr><td>Independencia física y lógica de datos</td><td>§1.3</td></tr><tr><td>Entidad, atributo, relación</td><td>§2.2-§2.4</td></tr><tr><td>Grado y cardinalidad (1:1, 1:N, N:M)</td><td>§2.4</td></tr><tr><td>Participación total/parcial</td><td>§2.4</td></tr><tr><td>Generalización/especialización, agregación</td><td>§2.6</td></tr><tr><td>Notación pata de gallo (crow's foot)</td><td>§2.7</td></tr><tr><td>Diagrama de transición de estados (DTE)</td><td>§3</td></tr><tr><td>Procesos, flujos, almacenes, entidades externas</td><td>§4.1</td></tr><tr><td>Diagrama de contexto y explosión por niveles</td><td>§4.3</td></tr><tr><td>Equilibrado (balanceo) de DFD</td><td>§4.3</td></tr><tr><td>Diccionario de datos</td><td>§4.4</td></tr><tr><td>Símbolos ISO 5807 (terminal, proceso, decisión)</td><td>§5.2</td></tr><tr><td>Secuencia, selección, iteración (Böhm-Jacopini)</td><td>§5.3</td></tr><tr><td>Diagramas UML (estructura vs comportamiento)</td><td>§5.6</td></tr></tbody></table>
+</section><section id="tab-diagramas" class="tab-content"><hr>
+<h2>Índice de diagramas</h2>
+<table><thead><tr><th>ID</th><th>Título</th><th>Sección</th><th>Tipo</th></tr></thead><tbody><tr><td>D1</td><td>Tres niveles de modelo de datos</td><td>§1.1</td><td>Capas</td></tr><tr><td>D2</td><td>Arquitectura ANSI/SPARC (tres esquemas)</td><td>§1.2</td><td>Capas</td></tr><tr><td>D3</td><td>Independencia de datos: física y lógica</td><td>§1.3</td><td>Conceptual</td></tr><tr><td>D4</td><td>Las tres vistas del modelado</td><td>§1.5</td><td>Mapa</td></tr><tr><td>D5</td><td>Notación de Chen: entidad, atributo y relación</td><td>§2.3</td><td>Estructura</td></tr><tr><td>D6</td><td>Cardinalidades 1:1, 1:N y N:M</td><td>§2.4</td><td>Comparativa</td></tr><tr><td>D7</td><td>Generalización / especialización (jerarquía es-un)</td><td>§2.6</td><td>Jerarquía</td></tr><tr><td>D8</td><td>Tres notaciones E-R: Chen, pata de gallo y UML</td><td>§2.7</td><td>Comparativa</td></tr><tr><td>D9</td><td>Diagrama de transición de estados (expediente)</td><td>§3.1</td><td>Estados</td></tr><tr><td>D10</td><td>Componentes del DFD</td><td>§4.1</td><td>Bloques</td></tr><tr><td>D11</td><td>Descomposición del DFD por niveles + equilibrado</td><td>§4.3</td><td>Niveles</td></tr><tr><td>D12</td><td>Flujograma: símbolos ISO 5807 y estructuras básicas</td><td>§5.2</td><td>Símbolos</td></tr></tbody></table>
+<hr>
+<h2>D1 · Tres niveles de modelo de datos</h2>
+<p><strong>Sección</strong>: §1.1 — Modelo conceptual, lógico y físico · <strong>Propósito</strong>: Situar el modelo conceptual de datos respecto al lógico y al físico, y su grado de dependencia del SGBD.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 300" role="img" aria-label="Tres niveles de modelo de datos: conceptual, lógico y físico, con dependencia creciente del SGBD">
+  <style>.t{font:700 14px system-ui,sans-serif;fill:#fff}.s{font:12px system-ui,sans-serif;fill:#1a1a1a}.lab{font:11px system-ui,sans-serif;fill:#666}.h{font:700 13px system-ui,sans-serif;fill:#0055a0}</style>
+  <text x="330" y="26" text-anchor="middle" class="h">Del concepto al almacenamiento</text>
+  <rect x="120" y="45" width="420" height="60" rx="8" fill="#0055a0"/>
+  <text x="330" y="72" text-anchor="middle" class="t">CONCEPTUAL — modelo Entidad-Relación</text>
+  <text x="330" y="92" text-anchor="middle" class="s" fill="#dce8f5">Independiente del SGBD · cercano al usuario</text>
+  <rect x="120" y="120" width="420" height="60" rx="8" fill="#3378b9"/>
+  <text x="330" y="147" text-anchor="middle" class="t">LÓGICO — modelo relacional (tablas)</text>
+  <text x="330" y="167" text-anchor="middle" class="s" fill="#e7eff8">Depende del TIPO de SGBD · cercano al diseñador</text>
+  <rect x="120" y="195" width="420" height="60" rx="8" fill="#002a52"/>
+  <text x="330" y="222" text-anchor="middle" class="t">FÍSICO — ficheros, índices, bloques</text>
+  <text x="330" y="242" text-anchor="middle" class="s" fill="#cdd9e6">Depende del PRODUCTO y el soporte</text>
+  <path d="M 70 55 L 70 245" stroke="#e89822" stroke-width="2.5" marker-end="url(#a1)"/>
+  <defs><marker id="a1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#e89822"/></marker></defs>
+  <text x="58" y="155" text-anchor="middle" class="lab" fill="#e89822" transform="rotate(-90 58 155)">+ dependencia tecnológica →</text>
+  <text x="572" y="280" text-anchor="end" class="lab">[Fuente: ELMASRI, cap. 2]</text>
+</svg>
+<hr>
+<h2>D2 · Arquitectura ANSI/SPARC (tres esquemas)</h2>
+<p><strong>Sección</strong>: §1.2 — Niveles externo, conceptual e interno · <strong>Propósito</strong>: Mostrar los tres esquemas y su cardinalidad (varios externos, un conceptual, un interno).</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 320" role="img" aria-label="Arquitectura ANSI/SPARC con tres niveles: varios esquemas externos, un esquema conceptual y un esquema interno">
+  <style>.t{font:700 13px system-ui,sans-serif;fill:#fff}.s{font:11px system-ui,sans-serif;fill:#1a1a1a}.lab{font:11px system-ui,sans-serif;fill:#666}.h{font:700 13px system-ui,sans-serif;fill:#0055a0}</style>
+  <text x="330" y="24" text-anchor="middle" class="h">Tres esquemas e independencia de datos</text>
+  <rect x="40" y="40" width="150" height="46" rx="6" fill="#2d8659"/><text x="115" y="60" text-anchor="middle" class="t">Vista A</text><text x="115" y="77" text-anchor="middle" class="s" fill="#dff0e7">contribuyentes</text>
+  <rect x="255" y="40" width="150" height="46" rx="6" fill="#2d8659"/><text x="330" y="60" text-anchor="middle" class="t">Vista B</text><text x="330" y="77" text-anchor="middle" class="s" fill="#dff0e7">padrón</text>
+  <rect x="470" y="40" width="150" height="46" rx="6" fill="#2d8659"/><text x="545" y="60" text-anchor="middle" class="t">Vista C</text><text x="545" y="77" text-anchor="middle" class="s" fill="#dff0e7">estadística</text>
+  <text x="635" y="105" text-anchor="end" class="lab">NIVEL EXTERNO (varios)</text>
+  <line x1="115" y1="86" x2="250" y2="135" stroke="#888"/><line x1="330" y1="86" x2="330" y2="135" stroke="#888"/><line x1="545" y1="86" x2="410" y2="135" stroke="#888"/>
+  <rect x="160" y="135" width="340" height="55" rx="8" fill="#0055a0"/>
+  <text x="330" y="158" text-anchor="middle" class="t">ESQUEMA CONCEPTUAL (único)</text>
+  <text x="330" y="178" text-anchor="middle" class="s" fill="#dce8f5">entidades · atributos · relaciones · restricciones</text>
+  <text x="635" y="210" text-anchor="end" class="lab">NIVEL CONCEPTUAL (uno)</text>
+  <line x1="330" y1="190" x2="330" y2="235" stroke="#888"/>
+  <rect x="160" y="235" width="340" height="55" rx="8" fill="#002a52"/>
+  <text x="330" y="258" text-anchor="middle" class="t">ESQUEMA INTERNO (único)</text>
+  <text x="330" y="278" text-anchor="middle" class="s" fill="#cdd9e6">ficheros · índices · rutas de acceso</text>
+  <text x="635" y="305" text-anchor="end" class="lab">NIVEL INTERNO (uno) — [ANSI-SPARC]</text>
+</svg>
+<hr>
+<h2>D3 · Independencia de datos: física y lógica</h2>
+<p><strong>Sección</strong>: §1.3 — Los dos tipos de independencia · <strong>Propósito</strong>: Visualizar qué nivel aísla cada tipo de independencia.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 250" role="img" aria-label="Independencia lógica entre externo y conceptual; independencia física entre conceptual e interno">
+  <style>.t{font:700 13px system-ui,sans-serif;fill:#fff}.lab{font:11px system-ui,sans-serif;fill:#444}.h{font:700 13px system-ui,sans-serif;fill:#0055a0}.tag{font:700 12px system-ui,sans-serif;fill:#d13c3c}</style>
+  <text x="330" y="24" text-anchor="middle" class="h">¿Qué aísla cada independencia?</text>
+  <rect x="210" y="40" width="240" height="40" rx="6" fill="#2d8659"/><text x="330" y="65" text-anchor="middle" class="t">VISTAS / APLICACIONES</text>
+  <line x1="120" y1="100" x2="540" y2="100" stroke="#d13c3c" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="120" y="95" class="tag">⇅ Independencia LÓGICA</text>
+  <text x="540" y="95" text-anchor="end" class="lab">cambiar el conceptual sin tocar vistas</text>
+  <rect x="210" y="120" width="240" height="40" rx="6" fill="#0055a0"/><text x="330" y="145" text-anchor="middle" class="t">ESQUEMA CONCEPTUAL</text>
+  <line x1="120" y1="180" x2="540" y2="180" stroke="#e89822" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="120" y="175" class="tag" fill="#e89822">⇅ Independencia FÍSICA</text>
+  <text x="540" y="175" text-anchor="end" class="lab">cambiar el almacenamiento sin tocar el conceptual</text>
+  <rect x="210" y="200" width="240" height="40" rx="6" fill="#002a52"/><text x="330" y="225" text-anchor="middle" class="t">ESQUEMA INTERNO (físico)</text>
+  <text x="650" y="246" text-anchor="end" class="lab" fill="#888">La lógica es la más difícil de lograr · [DATE]</text>
+</svg>
+<hr>
+<h2>D4 · Las tres vistas del modelado</h2>
+<p><strong>Sección</strong>: §1.5 — Estático, dinámico y funcional · <strong>Propósito</strong>: Asociar cada perspectiva con su técnica clásica y su equivalente UML.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 280" role="img" aria-label="Tres vistas del modelado: estática con E-R, dinámica con DTE y funcional con DFD, y sus equivalentes UML">
+  <style>.t{font:700 13px system-ui,sans-serif;fill:#fff}.s{font:11px system-ui,sans-serif;fill:#1a1a1a}.q{font:italic 11px system-ui,sans-serif;fill:#555}.h{font:700 13px system-ui,sans-serif;fill:#0055a0}.uml{font:11px system-ui,sans-serif;fill:#2d8659}</style>
+  <text x="330" y="24" text-anchor="middle" class="h">Sistema de información: tres perspectivas</text>
+  <rect x="30" y="50" width="190" height="180" rx="10" fill="#eaf1f8" stroke="#0055a0"/>
+  <rect x="40" y="60" width="170" height="34" rx="6" fill="#0055a0"/><text x="125" y="83" text-anchor="middle" class="t">ESTÁTICA</text>
+  <text x="125" y="118" text-anchor="middle" class="q">¿qué datos y cómo</text><text x="125" y="133" text-anchor="middle" class="q">se relacionan?</text>
+  <text x="125" y="170" text-anchor="middle" class="s" font-weight="700">Modelo E-R</text>
+  <text x="125" y="210" text-anchor="middle" class="uml">UML: clases</text>
+  <rect x="235" y="50" width="190" height="180" rx="10" fill="#eaf1f8" stroke="#0055a0"/>
+  <rect x="245" y="60" width="170" height="34" rx="6" fill="#0055a0"/><text x="330" y="83" text-anchor="middle" class="t">DINÁMICA</text>
+  <text x="330" y="118" text-anchor="middle" class="q">¿cómo cambia de</text><text x="330" y="133" text-anchor="middle" class="q">estado ante eventos?</text>
+  <text x="330" y="170" text-anchor="middle" class="s" font-weight="700">DTE</text>
+  <text x="330" y="210" text-anchor="middle" class="uml">UML: estados</text>
+  <rect x="440" y="50" width="190" height="180" rx="10" fill="#eaf1f8" stroke="#0055a0"/>
+  <rect x="450" y="60" width="170" height="34" rx="6" fill="#0055a0"/><text x="535" y="83" text-anchor="middle" class="t">FUNCIONAL</text>
+  <text x="535" y="118" text-anchor="middle" class="q">¿qué transformaciones</text><text x="535" y="133" text-anchor="middle" class="q">sufren los datos?</text>
+  <text x="535" y="170" text-anchor="middle" class="s" font-weight="700">DFD</text>
+  <text x="535" y="210" text-anchor="middle" class="uml">UML: actividad</text>
+  <text x="630" y="262" text-anchor="end" class="q">[Fuente: RUMBAUGH · YOURDON]</text>
+</svg>
+<hr>
+<h2>D5 · Notación de Chen: entidad, atributo y relación</h2>
+<p><strong>Sección</strong>: §2.3 — Iconografía del E-R · <strong>Propósito</strong>: Recoger la simbología de Chen, incluida la de los tipos de atributo.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 320" role="img" aria-label="Notación de Chen: entidad en rectángulo, relación en rombo, y tipos de atributos en elipses">
+  <style>.t{font:700 12px system-ui,sans-serif;fill:#0055a0}.w{font:700 12px system-ui,sans-serif;fill:#fff}.lab{font:11px system-ui,sans-serif;fill:#555}.h{font:700 13px system-ui,sans-serif;fill:#0055a0}</style>
+  <text x="330" y="22" text-anchor="middle" class="h">Símbolos del modelo Entidad-Relación (Chen)</text>
+  <!-- entidad + relacion + entidad -->
+  <rect x="40" y="120" width="120" height="50" fill="#0055a0" rx="2"/><text x="100" y="150" text-anchor="middle" class="w">HABITANTE</text>
+  <polygon points="300,120 360,145 300,170 240,145" fill="#e89822"/><text x="300" y="149" text-anchor="middle" class="w" font-size="11">EMPADRON.</text>
+  <rect x="440" y="120" width="120" height="50" fill="#0055a0" rx="2"/><text x="500" y="150" text-anchor="middle" class="w">VIVIENDA</text>
+  <line x1="160" y1="145" x2="240" y2="145" stroke="#333" stroke-width="1.5"/><text x="200" y="138" text-anchor="middle" class="lab">N</text>
+  <line x1="360" y1="145" x2="440" y2="145" stroke="#333" stroke-width="1.5"/><text x="400" y="138" text-anchor="middle" class="lab">1</text>
+  <!-- atributos de habitante -->
+  <ellipse cx="60" cy="60" rx="48" ry="20" fill="#fff" stroke="#0055a0"/><text x="60" y="64" text-anchor="middle" class="t" text-decoration="underline">DNI</text>
+  <line x1="70" y1="78" x2="90" y2="118" stroke="#0055a0"/>
+  <ellipse cx="165" cy="55" rx="50" ry="20" fill="#fff" stroke="#0055a0"/><ellipse cx="165" cy="55" rx="45" ry="15" fill="none" stroke="#0055a0"/><text x="165" y="59" text-anchor="middle" class="t" font-size="10">teléfono</text>
+  <line x1="150" y1="72" x2="110" y2="118" stroke="#0055a0"/>
+  <ellipse cx="270" cy="55" rx="46" ry="20" fill="#fff" stroke="#0055a0" stroke-dasharray="4 3"/><text x="270" y="59" text-anchor="middle" class="t" font-size="10">edad</text>
+  <line x1="250" y1="70" x2="135" y2="118" stroke="#0055a0" stroke-dasharray="3 3"/>
+  <!-- leyenda -->
+  <rect x="40" y="220" width="580" height="80" rx="8" fill="#f5f7fa" stroke="#d1d7df"/>
+  <text x="55" y="243" class="lab"><tspan font-weight="700">Rectángulo</tspan> = entidad   ◆ <tspan font-weight="700">Rombo</tspan> = relación   ⬭ <tspan font-weight="700">Elipse</tspan> = atributo</text>
+  <text x="55" y="266" class="lab"><tspan font-weight="700">Subrayado</tspan> = identificador (clave)   ·   <tspan font-weight="700">Elipse doble</tspan> = multivaluado</text>
+  <text x="55" y="289" class="lab"><tspan font-weight="700">Elipse discontinua</tspan> = derivado   ·   <tspan font-weight="700">Rectángulo doble</tspan> = entidad débil</text>
+  <text x="630" y="315" text-anchor="end" class="lab" fill="#888">[Fuente: CHEN · ELMASRI cap. 3]</text>
+</svg>
+<hr>
+<h2>D6 · Cardinalidades 1:1, 1:N y N:M</h2>
+<p><strong>Sección</strong>: §2.4 — Razón de cardinalidad · <strong>Propósito</strong>: Distinguir los tres tipos de cardinalidad máxima en relaciones binarias.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 300" role="img" aria-label="Tres cardinalidades: uno a uno, uno a muchos y muchos a muchos">
+  <style>.w{font:700 11px system-ui,sans-serif;fill:#fff}.c{font:700 13px system-ui,sans-serif;fill:#d13c3c}.lab{font:11px system-ui,sans-serif;fill:#555}.h{font:700 13px system-ui,sans-serif;fill:#0055a0}</style>
+  <text x="330" y="22" text-anchor="middle" class="h">Razón de cardinalidad (máxima)</text>
+  <!-- 1:1 -->
+  <text x="110" y="55" text-anchor="middle" class="c">1 : 1</text>
+  <rect x="40" y="70" width="60" height="34" rx="4" fill="#0055a0"/><text x="70" y="92" text-anchor="middle" class="w">PERSONA</text>
+  <line x1="100" y1="87" x2="150" y2="87" stroke="#333"/><text x="125" y="80" text-anchor="middle" class="lab">1   1</text>
+  <rect x="150" y="70" width="60" height="34" rx="4" fill="#0055a0"/><text x="180" y="92" text-anchor="middle" class="w">DNI</text>
+  <text x="125" y="125" text-anchor="middle" class="lab">cada persona, un DNI</text>
+  <!-- 1:N -->
+  <text x="330" y="55" text-anchor="middle" class="c">1 : N</text>
+  <rect x="250" y="70" width="60" height="34" rx="4" fill="#0055a0"/><text x="280" y="92" text-anchor="middle" class="w">DISTRITO</text>
+  <line x1="310" y1="87" x2="360" y2="87" stroke="#333"/><text x="335" y="80" text-anchor="middle" class="lab">1   N</text>
+  <rect x="360" y="70" width="60" height="34" rx="4" fill="#0055a0"/><text x="390" y="92" text-anchor="middle" class="w">BARRIO</text>
+  <text x="335" y="125" text-anchor="middle" class="lab">un distrito, muchos barrios</text>
+  <!-- N:M -->
+  <text x="560" y="55" text-anchor="middle" class="c">N : M</text>
+  <rect x="470" y="70" width="80" height="34" rx="4" fill="#0055a0"/><text x="510" y="92" text-anchor="middle" class="w">FUNCIONARIO</text>
+  <line x1="550" y1="87" x2="600" y2="87" stroke="#333"/><text x="575" y="80" text-anchor="middle" class="lab">N   M</text>
+  <rect x="600" y="70" width="50" height="34" rx="4" fill="#0055a0"/><text x="625" y="92" text-anchor="middle" class="w">CURSO</text>
+  <text x="560" y="125" text-anchor="middle" class="lab">varios en varios</text>
+  <!-- nota transformacion -->
+  <rect x="40" y="160" width="610" height="100" rx="8" fill="#e8f5ee" stroke="#2d8659"/>
+  <text x="55" y="184" class="h" fill="#2d8659">Al pasar a tablas (modelo relacional):</text>
+  <text x="55" y="208" class="lab">• <tspan font-weight="700">1:1</tspan> → clave ajena en una de las dos tablas</text>
+  <text x="55" y="230" class="lab">• <tspan font-weight="700">1:N</tspan> → la clave del lado «1» se propaga como clave ajena al lado «N»</text>
+  <text x="55" y="252" class="lab">• <tspan font-weight="700">N:M</tspan> → se crea una <tspan font-weight="700">tabla intermedia</tspan> con las claves de ambas entidades</text>
+  <text x="630" y="285" text-anchor="end" class="lab" fill="#888">[Fuente: ELMASRI cap. 9]</text>
+</svg>
+<hr>
+<h2>D7 · Generalización / especialización (jerarquía es-un)</h2>
+<p><strong>Sección</strong>: §2.6 — EER · <strong>Propósito</strong>: Mostrar el supertipo, los subtipos y las restricciones (disjunta/solapada, total/parcial).</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 280" role="img" aria-label="Jerarquía de generalización: supertipo PERSONAL con subtipos FUNCIONARIO y LABORAL">
+  <style>.w{font:700 12px system-ui,sans-serif;fill:#fff}.lab{font:11px system-ui,sans-serif;fill:#555}.h{font:700 13px system-ui,sans-serif;fill:#0055a0}.at{font:10px system-ui,sans-serif;fill:#0055a0}</style>
+  <text x="330" y="24" text-anchor="middle" class="h">Generalización / especialización (es-un)</text>
+  <rect x="250" y="45" width="160" height="50" rx="3" fill="#0055a0"/><text x="330" y="68" text-anchor="middle" class="w">PERSONAL</text><text x="330" y="86" text-anchor="middle" class="at" fill="#cfe0f0">dni · nombre · fecha_alta</text>
+  <text x="425" y="80" class="lab">supertipo (atributos comunes)</text>
+  <!-- triangulo ISA -->
+  <line x1="330" y1="95" x2="330" y2="120" stroke="#333"/>
+  <polygon points="330,120 312,145 348,145" fill="#fff" stroke="#333"/><text x="330" y="139" text-anchor="middle" class="lab" font-size="9">ISA</text>
+  <line x1="200" y1="160" x2="312" y2="140" stroke="#333"/><line x1="460" y1="160" x2="348" y2="140" stroke="#333"/>
+  <rect x="120" y="160" width="160" height="55" rx="3" fill="#3378b9"/><text x="200" y="183" text-anchor="middle" class="w">FUNCIONARIO</text><text x="200" y="201" text-anchor="middle" class="at" fill="#e3edf7">cuerpo · nº_registro</text>
+  <rect x="380" y="160" width="160" height="55" rx="3" fill="#3378b9"/><text x="460" y="183" text-anchor="middle" class="w">LABORAL</text><text x="460" y="201" text-anchor="middle" class="at" fill="#e3edf7">convenio · categoría</text>
+  <rect x="120" y="235" width="420" height="38" rx="6" fill="#fdf4e4" stroke="#e89822"/>
+  <text x="135" y="251" class="lab"><tspan font-weight="700" fill="#e89822">Restricciones:</tspan> disjunta / solapada (¿un ejemplar en uno o varios subtipos?)</text>
+  <text x="135" y="267" class="lab">total / parcial (¿todo ejemplar del supertipo está en algún subtipo?) — [ELMASRI cap. 4]</text>
+</svg>
+<hr>
+<h2>D8 · Tres notaciones E-R: Chen, pata de gallo y UML</h2>
+<p><strong>Sección</strong>: §2.7 — Notaciones equivalentes · <strong>Propósito</strong>: Comparar cómo cada notación dibuja la misma relación 1:N.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 300" role="img" aria-label="La misma relación uno a muchos dibujada en notación Chen, pata de gallo y UML">
+  <style>.w{font:700 10px system-ui,sans-serif;fill:#fff}.lab{font:11px system-ui,sans-serif;fill:#555}.h{font:700 13px system-ui,sans-serif;fill:#0055a0}.tt{font:700 12px system-ui,sans-serif;fill:#0055a0}</style>
+  <text x="330" y="22" text-anchor="middle" class="h">«Un distrito contiene muchos barrios» (1:N) en tres notaciones</text>
+  <!-- Chen -->
+  <text x="110" y="55" text-anchor="middle" class="tt">CHEN</text>
+  <rect x="45" y="70" width="58" height="30" fill="#0055a0" rx="2"/><text x="74" y="90" text-anchor="middle" class="w">DISTRITO</text>
+  <polygon points="130,85 152,72 174,85 152,98" fill="#e89822"/><text x="152" y="89" text-anchor="middle" class="w" font-size="8">contiene</text>
+  <rect x="118" y="120" width="58" height="30" fill="#0055a0" rx="2"/><text x="147" y="140" text-anchor="middle" class="w">BARRIO</text>
+  <line x1="103" y1="85" x2="130" y2="85" stroke="#333"/><text x="116" y="79" class="lab" font-size="9">1</text>
+  <line x1="152" y1="98" x2="152" y2="120" stroke="#333"/><text x="158" y="113" class="lab" font-size="9">N</text>
+  <!-- Crow's foot -->
+  <text x="330" y="55" text-anchor="middle" class="tt">PATA DE GALLO</text>
+  <rect x="260" y="75" width="64" height="30" fill="#0055a0" rx="2"/><text x="292" y="95" text-anchor="middle" class="w">DISTRITO</text>
+  <rect x="340" y="135" width="64" height="30" fill="#0055a0" rx="2"/><text x="372" y="155" text-anchor="middle" class="w">BARRIO</text>
+  <line x1="292" y1="105" x2="372" y2="135" stroke="#333" stroke-width="1.5"/>
+  <line x1="300" y1="112" x2="312" y2="116" stroke="#333"/>
+  <path d="M 360 130 L 372 135 L 360 140 M 372 135 L 360 135" stroke="#333" fill="none"/>
+  <text x="300" y="128" class="lab" font-size="9">uno</text><text x="320" y="150" class="lab" font-size="9">muchos</text>
+  <!-- UML -->
+  <text x="560" y="55" text-anchor="middle" class="tt">UML (clases)</text>
+  <rect x="500" y="72" width="120" height="34" fill="#2d8659" rx="2"/><text x="560" y="93" text-anchor="middle" class="w">Distrito</text>
+  <rect x="500" y="140" width="120" height="34" fill="#2d8659" rx="2"/><text x="560" y="161" text-anchor="middle" class="w">Barrio</text>
+  <line x1="560" y1="106" x2="560" y2="140" stroke="#333"/>
+  <text x="566" y="120" class="lab" font-size="10">1</text><text x="566" y="138" class="lab" font-size="10">1..*</text>
+  <rect x="45" y="210" width="575" height="60" rx="8" fill="#f5f7fa" stroke="#d1d7df"/>
+  <text x="60" y="234" class="lab">Las tres dicen lo mismo. <tspan font-weight="700">Chen</tspan>: rótulos 1/N. <tspan font-weight="700">Pata de gallo</tspan>: símbolos en los extremos (la «pata» = muchos).</text>
+  <text x="60" y="256" class="lab"><tspan font-weight="700">UML</tspan>: multiplicidad numérica (1, 1..*, 0..1, *). — [Fuente: SILBERSCHATZ · MARTIN · UML]</text>
+</svg>
+<hr>
+<h2>D9 · Diagrama de transición de estados (expediente)</h2>
+<p><strong>Sección</strong>: §3.1 — Modelado dinámico · <strong>Propósito</strong>: Ilustrar estados, transiciones y eventos con el ciclo de vida de un expediente.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 290" role="img" aria-label="Diagrama de transición de estados del ciclo de vida de un expediente administrativo">
+  <style>.w{font:700 11px system-ui,sans-serif;fill:#fff}.ev{font:10px system-ui,sans-serif;fill:#d13c3c}.h{font:700 13px system-ui,sans-serif;fill:#0055a0}.lab{font:11px system-ui,sans-serif;fill:#555}</style>
+  <text x="330" y="22" text-anchor="middle" class="h">Ciclo de vida de un expediente (DTE)</text>
+  <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#0055a0"/></marker></defs>
+  <circle cx="45" cy="90" r="7" fill="#002a52"/>
+  <rect x="75" y="70" width="105" height="40" rx="20" fill="#0055a0"/><text x="127" y="94" text-anchor="middle" class="w">INICIADO</text>
+  <rect x="235" y="70" width="125" height="40" rx="20" fill="#0055a0"/><text x="297" y="94" text-anchor="middle" class="w">EN TRAMITACIÓN</text>
+  <rect x="235" y="170" width="125" height="40" rx="20" fill="#e89822"/><text x="297" y="194" text-anchor="middle" class="w">SUBSANACIÓN</text>
+  <rect x="420" y="70" width="105" height="40" rx="20" fill="#0055a0"/><text x="472" y="94" text-anchor="middle" class="w">RESUELTO</text>
+  <rect x="555" y="70" width="95" height="40" rx="20" fill="#2d8659"/><text x="602" y="94" text-anchor="middle" class="w">ARCHIVADO</text>
+  <line x1="52" y1="90" x2="73" y2="90" stroke="#0055a0" marker-end="url(#ar)"/>
+  <line x1="180" y1="90" x2="233" y2="90" stroke="#0055a0" marker-end="url(#ar)"/><text x="206" y="83" text-anchor="middle" class="ev">admitir</text>
+  <line x1="297" y1="110" x2="297" y2="168" stroke="#0055a0" marker-end="url(#ar)"/><text x="303" y="142" class="ev">requerir [falta doc.]</text>
+  <path d="M 360 185 Q 410 150 360 112" stroke="#0055a0" fill="none" marker-end="url(#ar)"/><text x="412" y="150" class="ev">subsanar</text>
+  <line x1="360" y1="90" x2="418" y2="90" stroke="#0055a0" marker-end="url(#ar)"/><text x="389" y="83" text-anchor="middle" class="ev">resolver</text>
+  <line x1="525" y1="90" x2="553" y2="90" stroke="#0055a0" marker-end="url(#ar)"/><text x="540" y="83" text-anchor="middle" class="ev">notificar</text>
+  <circle cx="602" cy="140" r="9" fill="none" stroke="#2d8659" stroke-width="2"/><circle cx="602" cy="140" r="4" fill="#2d8659"/>
+  <line x1="602" y1="110" x2="602" y2="131" stroke="#0055a0" marker-end="url(#ar)"/>
+  <text x="45" y="250" class="lab">Etiqueta de transición: <tspan font-weight="700">evento [guarda] / acción</tspan> · estado inicial (●), estados, estado final (◎)</text>
+  <text x="630" y="275" text-anchor="end" class="lab" fill="#888">[Fuente: YOURDON · UML]</text>
+</svg>
+<hr>
+<h2>D10 · Componentes del DFD</h2>
+<p><strong>Sección</strong>: §4.1 — Los cuatro elementos · <strong>Propósito</strong>: Fijar los cuatro componentes del DFD y su simbología (Yourdon).</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 270" role="img" aria-label="Los cuatro componentes del diagrama de flujo de datos: proceso, flujo, almacén y entidad externa">
+  <style>.w{font:700 12px system-ui,sans-serif;fill:#fff}.b{font:700 12px system-ui,sans-serif;fill:#0055a0}.lab{font:11px system-ui,sans-serif;fill:#555}.h{font:700 13px system-ui,sans-serif;fill:#0055a0}</style>
+  <text x="330" y="22" text-anchor="middle" class="h">Cuatro componentes del DFD (notación Yourdon/DeMarco)</text>
+  <!-- proceso -->
+  <circle cx="100" cy="90" r="40" fill="#0055a0"/><text x="100" y="86" text-anchor="middle" class="w">1</text><text x="100" y="102" text-anchor="middle" class="w" font-size="9">Validar</text>
+  <text x="100" y="155" text-anchor="middle" class="b">PROCESO</text><text x="100" y="172" text-anchor="middle" class="lab">transforma datos</text>
+  <!-- flujo -->
+  <line x1="200" y1="90" x2="300" y2="90" stroke="#333" stroke-width="2" marker-end="url(#fl)"/>
+  <defs><marker id="fl" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#333"/></marker></defs>
+  <text x="250" y="82" text-anchor="middle" class="lab">solicitud</text>
+  <text x="250" y="155" text-anchor="middle" class="b">FLUJO</text><text x="250" y="172" text-anchor="middle" class="lab">dato en movimiento</text>
+  <!-- almacen -->
+  <line x1="360" y1="72" x2="460" y2="72" stroke="#0055a0" stroke-width="2"/>
+  <line x1="360" y1="108" x2="460" y2="108" stroke="#0055a0" stroke-width="2"/>
+  <line x1="360" y1="72" x2="360" y2="108" stroke="#0055a0" stroke-width="2"/>
+  <text x="375" y="94" class="b" font-size="11">D1</text><text x="415" y="94" text-anchor="middle" class="lab">Padrón</text>
+  <text x="410" y="155" text-anchor="middle" class="b">ALMACÉN</text><text x="410" y="172" text-anchor="middle" class="lab">dato en reposo</text>
+  <!-- entidad externa -->
+  <rect x="510" y="60" width="120" height="60" rx="2" fill="#2d8659"/><text x="570" y="95" text-anchor="middle" class="w">CONTRIBUYENTE</text>
+  <text x="570" y="155" text-anchor="middle" class="b">ENTIDAD EXTERNA</text><text x="570" y="172" text-anchor="middle" class="lab">frontera del sistema</text>
+  <rect x="40" y="200" width="590" height="56" rx="8" fill="#fbeeed" stroke="#d13c3c"/>
+  <text x="55" y="223" class="lab"><tspan font-weight="700" fill="#d13c3c">Regla:</tspan> todo flujo pasa por un proceso. PROHIBIDO almacén↔almacén, entidad↔entidad, entidad↔almacén directos.</text>
+  <text x="55" y="245" class="lab">Todo proceso tiene ≥1 entrada y ≥1 salida (ni «agujero negro» ni «milagro»). — [DEMARCO]</text>
+</svg>
+<hr>
+<h2>D11 · Descomposición del DFD por niveles + equilibrado</h2>
+<p><strong>Sección</strong>: §4.3 — Niveles y balanceo · <strong>Propósito</strong>: Mostrar contexto (nivel 0), nivel 1 y explosión, y la regla de equilibrado.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 330" role="img" aria-label="Descomposición del DFD: diagrama de contexto nivel 0, nivel 1 y explosión de un proceso con equilibrado de flujos">
+  <style>.w{font:700 11px system-ui,sans-serif;fill:#fff}.lab{font:11px system-ui,sans-serif;fill:#555}.h{font:700 12px system-ui,sans-serif;fill:#0055a0}.eq{font:700 11px system-ui,sans-serif;fill:#2d8659}</style>
+  <text x="330" y="20" text-anchor="middle" class="h">Top-down: del contexto a las primitivas funcionales</text>
+  <!-- nivel 0 -->
+  <text x="100" y="48" text-anchor="middle" class="h">Nivel 0 · contexto</text>
+  <rect x="40" y="60" width="50" height="26" rx="2" fill="#2d8659"/><text x="65" y="78" text-anchor="middle" class="w" font-size="9">CONTRIB.</text>
+  <circle cx="135" cy="95" r="28" fill="#0055a0"/><text x="135" y="99" text-anchor="middle" class="w">0</text>
+  <rect x="180" y="105" width="50" height="26" rx="2" fill="#2d8659"/><text x="205" y="123" text-anchor="middle" class="w" font-size="9">BANCO</text>
+  <line x1="90" y1="78" x2="108" y2="88" stroke="#333" marker-end="url(#m2)"/><text x="92" y="72" class="lab" font-size="9">declarac.</text>
+  <line x1="160" y1="110" x2="180" y2="116" stroke="#333" marker-end="url(#m2)"/><text x="150" y="135" class="lab" font-size="9">cobro</text>
+  <defs><marker id="m2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#333"/></marker></defs>
+  <text x="100" y="160" text-anchor="middle" class="lab" font-size="10">1 burbuja · sin almacenes</text>
+  <!-- nivel 1 -->
+  <text x="400" y="48" text-anchor="middle" class="h">Nivel 1 · sistema</text>
+  <circle cx="320" cy="85" r="22" fill="#0055a0"/><text x="320" y="89" text-anchor="middle" class="w">1</text>
+  <circle cx="400" cy="85" r="22" fill="#0055a0"/><text x="400" y="89" text-anchor="middle" class="w">2</text>
+  <circle cx="480" cy="85" r="22" fill="#0055a0"/><text x="480" y="89" text-anchor="middle" class="w">3</text>
+  <line x1="342" y1="85" x2="378" y2="85" stroke="#333" marker-end="url(#m2)"/>
+  <line x1="422" y1="85" x2="458" y2="85" stroke="#333" marker-end="url(#m2)"/>
+  <line x1="350" y1="125" x2="450" y2="125" stroke="#0055a0"/><line x1="350" y1="140" x2="450" y2="140" stroke="#0055a0"/><line x1="350" y1="125" x2="350" y2="140" stroke="#0055a0"/><text x="360" y="137" class="h" font-size="10">D1 Liquidaciones</text>
+  <line x1="400" y1="107" x2="400" y2="125" stroke="#333" marker-end="url(#m2)"/>
+  <text x="400" y="165" text-anchor="middle" class="lab" font-size="10">procesos 1,2,3 + almacenes</text>
+  <!-- nivel 2 explosion -->
+  <text x="330" y="205" text-anchor="middle" class="h">Nivel 2 · explosión del proceso «1»</text>
+  <rect x="150" y="220" width="360" height="80" rx="8" fill="#eaf1f8" stroke="#0055a0" stroke-dasharray="5 4"/>
+  <circle cx="220" cy="260" r="20" fill="#3378b9"/><text x="220" y="264" text-anchor="middle" class="w" font-size="10">1.1</text>
+  <circle cx="330" cy="260" r="20" fill="#3378b9"/><text x="330" y="264" text-anchor="middle" class="w" font-size="10">1.2</text>
+  <circle cx="440" cy="260" r="20" fill="#3378b9"/><text x="440" y="264" text-anchor="middle" class="w" font-size="10">1.3</text>
+  <line x1="240" y1="260" x2="310" y2="260" stroke="#333" marker-end="url(#m2)"/>
+  <line x1="350" y1="260" x2="420" y2="260" stroke="#333" marker-end="url(#m2)"/>
+  <line x1="110" y1="260" x2="200" y2="260" stroke="#2d8659" stroke-width="2" marker-end="url(#m3)"/><text x="120" y="253" class="eq" font-size="9">declarac.</text>
+  <line x1="460" y1="260" x2="550" y2="260" stroke="#2d8659" stroke-width="2" marker-end="url(#m3)"/><text x="500" y="253" class="eq" font-size="9">liquidación</text>
+  <defs><marker id="m3" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2d8659"/></marker></defs>
+  <text x="330" y="320" text-anchor="middle" class="eq">EQUILIBRADO: los flujos verdes (frontera del hijo) = entradas/salidas del proceso «1» del nivel 1 — [DEMARCO]</text>
+</svg>
+<hr>
+<h2>D12 · Flujograma: símbolos ISO 5807 y estructuras básicas</h2>
+<p><strong>Sección</strong>: §5.2 — Símbolos y control · <strong>Propósito</strong>: Recoger los símbolos normalizados y las tres estructuras de la programación estructurada.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 340" role="img" aria-label="Símbolos de flujograma ISO 5807 y las tres estructuras básicas: secuencia, selección e iteración">
+  <style>.w{font:700 11px system-ui,sans-serif;fill:#fff}.lab{font:10px system-ui,sans-serif;fill:#555}.h{font:700 13px system-ui,sans-serif;fill:#0055a0}.t{font:11px system-ui,sans-serif;fill:#1a1a1a}</style>
+  <text x="330" y="20" text-anchor="middle" class="h">Símbolos (ISO 5807) y estructuras de control</text>
+  <!-- simbolos -->
+  <rect x="30" y="40" width="90" height="34" rx="17" fill="#002a52"/><text x="75" y="61" text-anchor="middle" class="w">inicio/fin</text><text x="75" y="88" text-anchor="middle" class="lab">terminal (óvalo)</text>
+  <rect x="140" y="40" width="90" height="34" fill="#0055a0"/><text x="185" y="61" text-anchor="middle" class="w">proceso</text><text x="185" y="88" text-anchor="middle" class="lab">acción</text>
+  <polygon points="295,40 335,57 295,74 255,57" fill="#e89822"/><text x="295" y="61" text-anchor="middle" class="w" font-size="10">¿cond?</text><text x="295" y="88" text-anchor="middle" class="lab">decisión (rombo)</text>
+  <polygon points="370,40 460,40 440,74 350,74" fill="#2d8659"/><text x="405" y="61" text-anchor="middle" class="w">E/S</text><text x="405" y="88" text-anchor="middle" class="lab">entrada/salida</text>
+  <circle cx="540" cy="57" r="17" fill="#666"/><text x="540" y="61" text-anchor="middle" class="w" font-size="10">A</text><text x="540" y="88" text-anchor="middle" class="lab">conector</text>
+  <line x1="30" y1="105" x2="630" y2="105" stroke="#d1d7df"/>
+  <!-- secuencia -->
+  <text x="110" y="128" text-anchor="middle" class="h" font-size="12">SECUENCIA</text>
+  <rect x="80" y="138" width="60" height="24" fill="#0055a0"/><text x="110" y="155" text-anchor="middle" class="w" font-size="10">A</text>
+  <rect x="80" y="178" width="60" height="24" fill="#0055a0"/><text x="110" y="195" text-anchor="middle" class="w" font-size="10">B</text>
+  <line x1="110" y1="162" x2="110" y2="178" stroke="#333" marker-end="url(#mf)"/>
+  <defs><marker id="mf" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#333"/></marker></defs>
+  <!-- seleccion -->
+  <text x="330" y="128" text-anchor="middle" class="h" font-size="12">SELECCIÓN</text>
+  <polygon points="330,140 366,158 330,176 294,158" fill="#e89822"/><text x="330" y="162" text-anchor="middle" class="w" font-size="9">¿c?</text>
+  <rect x="250" y="195" width="50" height="22" fill="#0055a0"/><text x="275" y="211" text-anchor="middle" class="w" font-size="9">sí</text>
+  <rect x="360" y="195" width="50" height="22" fill="#0055a0"/><text x="385" y="211" text-anchor="middle" class="w" font-size="9">no</text>
+  <line x1="305" y1="170" x2="275" y2="195" stroke="#333" marker-end="url(#mf)"/>
+  <line x1="355" y1="170" x2="385" y2="195" stroke="#333" marker-end="url(#mf)"/>
+  <!-- iteracion -->
+  <text x="555" y="128" text-anchor="middle" class="h" font-size="12">ITERACIÓN</text>
+  <polygon points="555,140 591,158 555,176 519,158" fill="#e89822"/><text x="555" y="162" text-anchor="middle" class="w" font-size="9">¿c?</text>
+  <rect x="525" y="198" width="60" height="22" fill="#0055a0"/><text x="555" y="214" text-anchor="middle" class="w" font-size="9">cuerpo</text>
+  <line x1="555" y1="176" x2="555" y2="198" stroke="#333" marker-end="url(#mf)"/><text x="562" y="190" class="lab">sí</text>
+  <path d="M 585 209 Q 625 185 591 158" stroke="#333" fill="none" marker-end="url(#mf)"/>
+  <rect x="40" y="245" width="590" height="80" rx="8" fill="#f5f7fa" stroke="#d1d7df"/>
+  <text x="55" y="268" class="t"><tspan font-weight="700">Böhm-Jacopini (1966):</tspan> todo algoritmo se expresa con secuencia + selección + iteración, sin «goto».</text>
+  <text x="55" y="291" class="t"><tspan font-weight="700">mientras</tspan> (while): comprueba antes (0..n veces). <tspan font-weight="700">repetir-hasta</tspan> (do-until): comprueba después (1..n veces).</text>
+  <text x="55" y="314" class="t">Del rombo salen ≥2 ramas; del proceso, 1. Flujo por defecto: arriba→abajo. — [ISO5807 · BOHM-JACOPINI]</text>
+</svg>
+</section><section id="tab-test" class="tab-content">
+<div class="test-bar">
+  <div class="kpi">Respondidas<b id="s-resp">0</b></div>
+  <div class="kpi">Aciertos<b id="s-correct">0</b></div>
+  <div class="kpi">Fallos<b id="s-wrong">0</b></div>
+  <div class="kpi">Nota (−1/3)<b id="s-score">0.00</b></div>
+  <button class="btn-c" onclick="correctAll()">Corregir todo</button>
+  <button class="btn-r" onclick="resetTest()">Reiniciar</button>
+</div>
+<div id="test-container"></div>
+</section><section id="tab-casos" class="tab-content"><hr>
+<p>Tres casos aplicados al Ayuntamiento de Madrid. Cada caso suma <strong>10 puntos</strong> e integra las tres vistas del modelado (estática, funcional y dinámica) más los flujogramas, en línea con la parte práctica del examen del Grupo II.</p>
+<hr>
+<h2>Caso 1 — Modelo conceptual (E-R) del Padrón Municipal de Habitantes</h2>
+<h3>Enunciado</h3>
+<p>El Servicio de Estadística del Ayuntamiento de Madrid encarga el <strong>modelo conceptual de datos</strong> del Padrón Municipal. Del análisis de requisitos se extrae:</p>
+<ul><li>Cada <strong>habitante</strong> se identifica por su <strong>DNI/NIE</strong>, y se registran nombre, apellidos, fecha de nacimiento, sexo y uno o varios teléfonos de contacto.</li><li>Cada habitante está <strong>empadronado en una vivienda</strong>, y en una vivienda pueden estar empadronados varios habitantes. Todo habitante debe estar empadronado en una vivienda; una vivienda puede no tener a nadie empadronado.</li><li>Cada <strong>vivienda</strong> se identifica por la combinación de su <strong>vía</strong> y un número/planta/puerta, y pertenece a un <strong>distrito</strong>.</li><li>El <strong>distrito</strong> se identifica por un código y tiene un nombre. Un distrito agrupa muchas viviendas.</li></ul>
+<h3>Cuestiones</h3>
+<ol><li><strong>(3 puntos)</strong> Identifica las <strong>entidades</strong> y sus <strong>atributos</strong>, señalando el identificador (clave) de cada una y clasificando los atributos especiales (compuesto, multivaluado, derivado) que detectes.</li><li><strong>(3 puntos)</strong> Define las <strong>relaciones</strong> entre las entidades, indicando <strong>grado</strong> y <strong>cardinalidad máxima</strong> (1:1, 1:N, N:M).</li><li><strong>(2 puntos)</strong> Especifica la <strong>participación</strong> (total/parcial) de cada entidad en la relación «empadronamiento», justificándola con el enunciado.</li><li><strong>(2 puntos)</strong> Indica cómo quedaría la transformación de la relación «empadronamiento» al <strong>modelo relacional</strong> (tablas y claves ajenas).</li></ol>
+<h3>Solución orientativa</h3>
+<ol><li><strong>Entidades y atributos</strong>:</li></ol>
+<ul><li><code>HABITANTE</code> (clave: <u>DNI/NIE</u>); <code>nombre_completo</code> (compuesto: nombre + apellidos); <code>fecha_nacimiento</code>; <code>sexo</code>; <code>teléfono</code> (multivaluado); <code>edad</code> sería un atributo <strong>derivado</strong> de <code>fecha_nacimiento</code> (no se almacena).</li><li><code>VIVIENDA</code>: clave compuesta por la vía + número + planta + puerta; podría modelarse como <strong>entidad débil</strong> dependiente de <code>VÍA</code>.</li><li><code>DISTRITO</code> (clave: <u>código_distrito</u>); <code>nombre</code>.</li></ul>
+<ol><li><strong>Relaciones</strong>:</li></ol>
+<ul><li><code>EMPADRONADO_EN</code> (HABITANTE–VIVIENDA): binaria, <strong>1:N</strong> (una vivienda, muchos habitantes; cada habitante, una vivienda). Atributo de la relación: <code>fecha_alta</code>.</li><li><code>PERTENECE</code> (VIVIENDA–DISTRITO): binaria, <strong>1:N</strong> (un distrito, muchas viviendas).</li></ul>
+<ol><li><strong>Participación</strong> en <code>EMPADRONADO_EN</code>: HABITANTE participa de forma <strong>total</strong> («todo habitante debe estar empadronado»); VIVIENDA, <strong>parcial</strong> («una vivienda puede no tener a nadie»). En notación (mín,máx): HABITANTE (1,1), VIVIENDA (0,N).</li><li><strong>Transformación</strong>: al ser <strong>1:N</strong>, la clave de VIVIENDA (lado «1») se propaga como <strong>clave ajena</strong> a la tabla <code>HABITANTE</code> (lado «N»), junto con <code>fecha_alta</code>. No se crea tabla intermedia (eso solo en N:M).</li></ol>
+<h3>Criterios de evaluación</h3>
+<ul><li>Distinguir atributo derivado (<code>edad</code>) y multivaluado (<code>teléfono</code>): hasta 1 punto.</li><li>Cardinalidades correctas (1:N en ambas relaciones): hasta 1,5 puntos.</li><li>Participación total/parcial bien justificada: hasta 2 puntos.</li><li>Transformación 1:N con clave ajena en el lado «N» (no tabla intermedia): hasta 2 puntos.</li></ul>
+<hr>
+<h2>Caso 2 — Diagrama de flujo de datos (DFD) de la gestión de una tasa municipal</h2>
+<h3>Enunciado</h3>
+<p>La Agencia Tributaria de Madrid quiere modelar, mediante <strong>análisis estructurado</strong>, el sistema de <strong>gestión de la tasa de paso de vehículos (vado)</strong>. Se sabe que:</p>
+<ul><li>El <strong>contribuyente</strong> presenta una <strong>solicitud</strong> (presencial o telemática). El sistema <strong>valida</strong> los datos y, si son correctos, <strong>liquida</strong> la tasa calculando la base imponible y aplicando el tipo. La <strong>liquidación</strong> se guarda y se envía un <strong>recibo</strong> al contribuyente.</li><li>Cuando el contribuyente paga en una <strong>entidad bancaria</strong>, esta comunica el <strong>cobro</strong>, que el sistema <strong>registra</strong>, marcando la liquidación como pagada.</li><li>Existen dos almacenes: <code>D1 Liquidaciones</code> y <code>D2 Cobros</code>.</li></ul>
+<h3>Cuestiones</h3>
+<ol><li><strong>(2 puntos)</strong> Dibuja (o describe) el <strong>diagrama de contexto (nivel 0)</strong>: el proceso único, las entidades externas y los flujos de frontera.</li><li><strong>(3 puntos)</strong> Descompón el sistema en un <strong>DFD de nivel 1</strong> con los procesos principales y los almacenes.</li><li><strong>(2 puntos)</strong> Enuncia <strong>dos reglas de construcción</strong> del DFD y verifica que tu diagrama las cumple.</li><li><strong>(3 puntos)</strong> Explica la regla de <strong>equilibrado (balanceo)</strong> y cómo la aplicarías al explotar el proceso «Liquidar tasa» en un nivel 2.</li></ol>
+<h3>Solución orientativa</h3>
+<ol><li><strong>Contexto (nivel 0)</strong>: una sola burbuja «0 · Gestión de la tasa de vado», con entidades externas <code>CONTRIBUYENTE</code> y <code>ENTIDAD_BANCARIA</code>. Flujos frontera: <code>solicitud</code> y <code>recibo</code> (con el contribuyente), <code>cobro</code> (con el banco). Sin almacenes visibles.</li><li><strong>Nivel 1</strong>: procesos «1 Validar solicitud», «2 Liquidar tasa», «3 Registrar cobro». Almacenes <code>D1 Liquidaciones</code> (escrito por 2, leído por 3) y <code>D2 Cobros</code> (escrito por 3). Flujos internos: <code>solicitud_válida</code> (1→2), <code>liquidación</code> (2→D1 y 2→recibo), <code>datos_cobro</code> (3→D2).</li><li><strong>Reglas</strong> (dos cualesquiera): (a) todo flujo pasa por un proceso → no hay flujo directo banco↔almacén; (b) todo proceso tiene ≥1 entrada y ≥1 salida → ni «agujero negro» ni «milagro». El diagrama las cumple.</li><li><strong>Equilibrado</strong>: al explotar «2 Liquidar tasa» en «2.1 Calcular base», «2.2 Aplicar tipo», «2.3 Generar liquidación», los flujos que cruzan la frontera del diagrama hijo deben ser <strong>exactamente</strong> los del proceso «2» en el nivel 1: entra <code>solicitud_válida</code>, salen <code>liquidación</code> (a D1) y <code>recibo</code>. Si en el hijo apareciera un flujo de entrada/salida nuevo no presente en el padre, el DFD estaría <strong>desequilibrado</strong>.</li></ol>
+<h3>Criterios de evaluación</h3>
+<ul><li>Diagrama de contexto con una sola burbuja y sin almacenes: hasta 2 puntos.</li><li>Nivel 1 coherente (procesos verbo+objeto, almacenes numerados): hasta 3 puntos.</li><li>Reglas correctamente enunciadas y verificadas: hasta 2 puntos.</li><li>Equilibrado bien explicado (flujos padre = flujos frontera del hijo): hasta 3 puntos.</li></ul>
+<hr>
+<h2>Caso 3 — Modelado dinámico (DTE) y flujograma del trámite de una licencia en la sede electrónica</h2>
+<h3>Enunciado</h3>
+<p>La sede electrónica del Ayuntamiento gestiona el ciclo de vida de una <strong>licencia urbanística</strong>. El comportamiento es:</p>
+<ul><li>La licencia nace <strong>INICIADA</strong> al presentarse la solicitud. Si se <strong>admite</strong>, pasa a <strong>EN TRAMITACIÓN</strong>.</li><li>Durante la tramitación, si faltan documentos, se <strong>requiere subsanación</strong> (estado <strong>SUBSANACIÓN</strong>); cuando el ciudadano <strong>subsana</strong> dentro de plazo, vuelve a <strong>EN TRAMITACIÓN</strong>.</li><li>Tras el informe técnico, la licencia se <strong>RESUELVE</strong> (concedida o denegada) y, al <strong>notificarse</strong>, queda <strong>ARCHIVADA</strong> (estado final).</li></ul>
+<p>Además, el proceso «<strong>comprobar plazo de subsanación</strong>» debe documentarse como <strong>flujograma</strong>: se lee la fecha límite; si la fecha actual es posterior, se declara la solicitud <strong>caducada</strong>; en caso contrario, se admite la documentación subsanada.</p>
+<h3>Cuestiones</h3>
+<ol><li><strong>(3 puntos)</strong> Construye el <strong>diagrama de transición de estados (DTE)</strong>: estados, transiciones y los <strong>eventos</strong> que las disparan; señala el estado inicial y el final.</li><li><strong>(2 puntos)</strong> Etiqueta al menos una transición con el patrón <strong><code>evento [condición] / acción</code></strong>.</li><li><strong>(3 puntos)</strong> Dibuja el <strong>flujograma</strong> del proceso «comprobar plazo de subsanación» usando los símbolos normalizados (terminal, E/S, proceso, decisión).</li><li><strong>(2 puntos)</strong> Indica qué <strong>estructura de control</strong> (secuencia, selección o iteración) emplea ese flujograma y por qué.</li></ol>
+<h3>Solución orientativa</h3>
+<ol><li><strong>DTE</strong>: estados <code>INICIADA</code> → <code>EN TRAMITACIÓN</code> → (<code>SUBSANACIÓN</code>) → <code>RESUELTA</code> → <code>ARCHIVADA</code>. Estado inicial: pseudoestado inicial → <code>INICIADA</code>. Estado final: <code>ARCHIVADA</code>. Eventos: <code>admitir</code>, <code>requerir</code>, <code>subsanar</code>, <code>resolver</code>, <code>notificar</code>.</li><li><strong>Transición etiquetada</strong>: <code>requerir [falta documentación] / registrar requerimiento</code> (de EN TRAMITACIÓN a SUBSANACIÓN); o <code>subsanar [dentro de plazo] / aceptar documentación</code> (de SUBSANACIÓN a EN TRAMITACIÓN).</li><li><strong>Flujograma</strong>: <code>Inicio</code> (óvalo) → <code>Leer fecha_límite y fecha_actual</code> (romboide E/S) → <code>¿fecha_actual &gt; fecha_límite?</code> (rombo): rama <strong>Sí</strong> → <code>Marcar solicitud CADUCADA</code> (rectángulo); rama <strong>No</strong> → <code>Admitir documentación subsanada</code> (rectángulo); ambas ramas → <code>Fin</code> (óvalo).</li><li><strong>Estructura de control</strong>: es una <strong>selección</strong> (condicional simple <code>si-entonces-si_no</code>), representada por el único rombo con dos ramas excluyentes. No hay repetición (no es iteración) ni mera sucesión (no es solo secuencia).</li></ol>
+<h3>Criterios de evaluación</h3>
+<ul><li>DTE con estado inicial único, estados excluyentes y eventos en las transiciones: hasta 3 puntos.</li><li>Etiqueta <code>evento [condición] / acción</code> correcta: hasta 2 puntos.</li><li>Flujograma con símbolos normalizados correctos (óvalo/romboide/rombo/rectángulo) y un solo fin: hasta 3 puntos.</li><li>Identificación de la selección como estructura de control: hasta 2 puntos.</li></ul>
+</section><section id="tab-validacion" class="tab-content"><hr>
+<p>Checklist de revisión para <strong>María / Ana (IAM)</strong> y, en su caso, <strong>Jesús Cuadrado</strong>. Marcar cada punto al validarlo.</p>
+<hr>
+<h2>1. Cobertura del enunciado oficial</h2>
+<ul><li>[ ] <strong>Modelo conceptual de datos</strong> tratado (§1) — concepto, niveles conceptual/lógico/físico.</li><li>[ ] <strong>Entidades, atributos y relaciones</strong> (§2.2-§2.4) — tipos de cada uno y su iconografía.</li><li>[ ] <strong>Reglas de modelización</strong> (§2.5) — proceso y errores típicos del E-R.</li><li>[ ] <strong>Diagramas de flujo de datos</strong> (§4) — cuatro componentes y reglas.</li><li>[ ] <strong>Reglas de construcción</strong> del DFD (§4.2) y del flujograma (§5.4).</li><li>[ ] <strong>Descomposición en niveles</strong> (§4.3) — contexto, nivel 1, explosión y equilibrado.</li><li>[ ] <strong>Flujogramas</strong> (§5) — símbolos ISO 5807 y estructuras de control.</li><li>[ ] Epígrafes del índice del cliente cubiertos: arquitectura ANSI (§1.2), modelado estático/dinámico/funcional (§1.5, §2, §3, §4), DTE (§3), DFD (§4), UML y tipos de diagramas (§5.6).</li></ul>
+<h2>2. Rigor técnico</h2>
+<ul><li>[ ] Definiciones de entidad fuerte/débil, atributos (compuesto/multivaluado/derivado/clave) correctas.</li><li>[ ] Cardinalidad (máxima) vs participación (mínima) bien diferenciadas.</li><li>[ ] Reglas «negativas» del DFD correctas (sin flujos directos almacén↔almacén, etc.).</li><li>[ ] Equilibrado/balanceo bien explicado.</li><li>[ ] Símbolos de flujograma (óvalo/rectángulo/rombo/romboide) correctos.</li><li>[ ] Teorema de Böhm-Jacopini y diferencia while/do-until correctos.</li><li>[ ] Equivalencias UML (clases ↔ E-R, estados ↔ DTE, actividad ↔ DFD/flujograma) correctas.</li></ul>
+<h2>3. Referencias cruzadas (vs BOAM 10.032)</h2>
+<ul><li>[ ] <strong>T13</strong> (Estructuras de datos) — citado en §3.3 (máquinas de estados).</li><li>[ ] <strong>T15</strong> (SGBD) — citado en §1.1, §4.5.</li><li>[ ] <strong>T17</strong> (Diseño lógico, modelo relacional, normalización) — citado en §1.1, §2.8.</li><li>[ ] <strong>T18</strong> (Lenguajes de programación) — citado en §5.3 (estructuras de control).</li><li>[ ] <strong>T20</strong> (POO, UML, patrones) — citado en §2.6 (herencia), §5.6 (UML).</li><li>[ ] Ninguna referencia cruzada inventa un enunciado de otro tema (revisión anti-alucinación).</li></ul>
+<h2>4. Aspectos pedagógicos y de formato</h2>
+<ul><li>[ ] Callouts (DATO CLAVE, EJERCICIO RESUELTO, EJEMPLO AYTO MADRID, REFERENCIA CRUZADA) bien empleados.</li><li>[ ] Ejemplos del Ayuntamiento de Madrid realistas (Padrón, tributos, sede electrónica).</li><li>[ ] 12 diagramas SVG legibles, con paleta corporativa y atribución de fuente.</li><li>[ ] 60 preguntas de test con respuesta única y explicación; distribución A/B/C equilibrada.</li><li>[ ] 3 casos prácticos con cuestiones puntuadas (suman 10) y criterios de evaluación.</li><li>[ ] Pestaña Índice presente y sincronizada con el contenido.</li></ul>
+<h2>5. Decisiones a confirmar por el cliente</h2>
+<ol><li><strong>Profundidad</strong>: ¿el nivel de detalle (incluir EER, agregación, notación pata de gallo, UML) es el adecuado para C1, o se prefiere recortar a notación de Chen + DFD + flujograma?</li><li><strong>UML</strong>: ¿se mantiene UML como equivalencia transversal o se trata como epígrafe independiente más extenso (último punto del índice oficial)?</li><li><strong>MÉTRICA v3</strong>: ¿interesa reforzar la terminología MÉTRICA (técnica del Modelo E-R, DFD, DTE del MAP) por ser la metodología de referencia en la Administración española?</li></ol>
+<p>_(Espacio para anotaciones de María, Ana y la revisión IAM.)_</p>
+</section><section id="tab-fuentes" class="tab-content"><hr>
+<h2>Cómo se citan las fuentes en este tema</h2>
+<p>Cada afirmación técnica del contenido va acompañada de una <strong>etiqueta breve</strong> entre corchetes, p. ej. <code>[CHEN]</code> o <code>[ELMASRI, cap. 3]</code>. El registro completo de cada etiqueta está en este documento. Las fuentes se agrupan en tres niveles:</p>
+<ul><li><strong>Tier 1 — Canónicas</strong>: obras y normas de referencia mundial sobre las que se construye el contenido. Todo dato relevante cita al menos una.</li><li><strong>Tier 2 — Complementarias</strong>: manuales y especificaciones que amplían o ilustran.</li><li><strong>Tier 3 — Contexto (no citadas inline)</strong>: material de apoyo y verificación, no usado como cita directa.</li></ul>
+<hr>
+<h2>Tier 1 — Fuentes canónicas</h2>
+<table><thead><tr><th>ID</th><th>Referencia</th></tr></thead><tbody><tr><td><code>[CHEN]</code></td><td>Chen, P. P. (1976). <em>The Entity-Relationship Model — Toward a Unified View of Data</em>. ACM Transactions on Database Systems, 1(1), 9-36. Artículo fundacional del modelo entidad-relación.</td></tr><tr><td><code>[ELMASRI]</code></td><td>Elmasri, R. &amp; Navathe, S. B. <em>Fundamentals of Database Systems</em> (7ª ed.). Pearson. Caps. 3-4 (modelo E-R y E-R extendido/EER), cap. 9 (paso a relacional).</td></tr><tr><td><code>[DATE]</code></td><td>Date, C. J. <em>An Introduction to Database Systems</em> (8ª ed.). Addison-Wesley. Niveles de abstracción, independencia de datos.</td></tr><tr><td><code>[SILBERSCHATZ]</code></td><td>Silberschatz, A., Korth, H. F. &amp; Sudarshan, S. <em>Database System Concepts</em> (7ª ed.). McGraw-Hill. Cap. 6 (modelo E-R), notaciones.</td></tr><tr><td><code>[ANSI-SPARC]</code></td><td>ANSI/X3/SPARC Study Group on Data Base Management Systems (1975). <em>Interim Report</em>. Arquitectura de tres esquemas (externo, conceptual, interno).</td></tr><tr><td><code>[CODD]</code></td><td>Codd, E. F. (1970). <em>A Relational Model of Data for Large Shared Data Banks</em>. CACM 13(6). Modelo relacional (destino de la transformación del E-R).</td></tr><tr><td><code>[DEMARCO]</code></td><td>DeMarco, T. (1979). <em>Structured Analysis and System Specification</em>. Yourdon Press. Diagramas de flujo de datos (DFD), descomposición por niveles, diccionario de datos.</td></tr><tr><td><code>[GANE-SARSON]</code></td><td>Gane, C. &amp; Sarson, T. (1979). <em>Structured Systems Analysis: Tools and Techniques</em>. Prentice-Hall. Notación alternativa de DFD (rectángulos redondeados).</td></tr><tr><td><code>[YOURDON]</code></td><td>Yourdon, E. (1989). <em>Modern Structured Analysis</em>. Yourdon Press. Análisis estructurado moderno, modelo esencial, DTE.</td></tr><tr><td><code>[ISO5807]</code></td><td>ISO 5807:1985. <em>Information processing — Documentation symbols and conventions for data, program and system flowcharts, program network charts and system resources charts</em>. Símbolos normalizados de diagramas de flujo.</td></tr><tr><td><code>[BOHM-JACOPINI]</code></td><td>Böhm, C. &amp; Jacopini, G. (1966). <em>Flow Diagrams, Turing Machines and Languages with Only Two Formation Rules</em>. CACM 9(5). Teorema de la programación estructurada (secuencia, selección, iteración).</td></tr><tr><td><code>[UML]</code></td><td>Object Management Group (OMG). <em>Unified Modeling Language (UML) Specification</em>, v2.5.1 (2017). Diagramas de estructura y de comportamiento.</td></tr><tr><td><code>[METRICA3]</code></td><td>Ministerio de Administraciones Públicas (España). <em>MÉTRICA versión 3</em>. Metodología de planificación, desarrollo y mantenimiento de sistemas de información. Técnicas: Modelo E-R, Diagrama de Flujo de Datos, Diagrama de Transición de Estados, Diccionario de Datos.</td></tr><tr><td><code>[ISO11404]</code></td><td>ISO/IEC 11404:2007. <em>General-Purpose Datatypes (GPD)</em>. Tipos de datos independientes del lenguaje (dominios de atributos).</td></tr></tbody></table>
+<hr>
+<h2>Tier 2 — Fuentes complementarias</h2>
+<table><thead><tr><th>ID</th><th>Referencia</th></tr></thead><tbody><tr><td><code>[FOWLER]</code></td><td>Fowler, M. <em>UML Distilled</em> (3ª ed.). Addison-Wesley. Síntesis práctica de los diagramas UML.</td></tr><tr><td><code>[PRESSMAN]</code></td><td>Pressman, R. S. <em>Ingeniería del Software: un enfoque práctico</em> (7ª ed.). McGraw-Hill. Modelado de análisis (datos, flujo, comportamiento).</td></tr><tr><td><code>[RUMBAUGH]</code></td><td>Rumbaugh, J. et al. (1991). <em>Object-Modeling Technique (OMT)</em>. Precursor de UML; modelado de objetos, dinámico y funcional.</td></tr><tr><td><code>[BACHMAN]</code></td><td>Bachman, C. W. (1969). <em>Data Structure Diagrams</em>. Diagramas de Bachman, antecedente del E-R.</td></tr><tr><td><code>[MARTIN]</code></td><td>Martin, J. <em>Information Engineering</em>. Notación "pata de gallo" (crow's foot) para cardinalidades.</td></tr><tr><td><code>[ANSI-X3.5]</code></td><td>ANSI X3.5-1970. <em>Flowchart Symbols and Their Usage in Information Processing</em>. Antecedente estadounidense de ISO 5807.</td></tr></tbody></table>
+<hr>
+<h2>Tier 3 — Contexto y verificación (no citadas inline)</h2>
+<table><thead><tr><th>ID</th><th>Referencia</th></tr></thead><tbody><tr><td><code>[BOAM10032]</code></td><td>Convocatoria oficial del proceso selectivo (BOAM 10.032, 23-dic-2025). Define el enunciado del Tema 16 y la estructura del examen.</td></tr><tr><td><code>[NTI]</code></td><td>Esquema Nacional de Interoperabilidad (RD 4/2010) y sus Normas Técnicas. Contexto de modelado de datos en la Administración.</td></tr><tr><td><code>[PORTAL-DATOS-MADRID]</code></td><td>Portal de Datos Abiertos del Ayuntamiento de Madrid (datos.madrid.es). Ejemplos de conjuntos de datos municipales (Padrón, callejero, censo).</td></tr></tbody></table>
+<hr>
+<h2>Nota sobre las dos grandes familias de notación</h2>
+<p>El temario mezcla <strong>notación clásica</strong> (Chen para E-R; DeMarco/Yourdon y Gane/Sarson para DFD; ISO 5807 para flujogramas) con <strong>UML</strong> (último epígrafe). Este material presenta <strong>ambas a la par</strong>: la notación clásica es la que tradicionalmente piden los exámenes de oposición españoles (alineada con MÉTRICA v3), y UML se añade como equivalencia moderna y estándar de la industria, indicando en cada técnica su correspondencia (E-R ↔ diagrama de clases; DTE ↔ diagrama de estados; flujograma ↔ diagrama de actividad).</p>
+</section>
+<div class="footer">ETRIVIUM · Material formativo TIC C1 · IAM Ayuntamiento de Madrid · Expediente 300_2026_00147<br>Tema 16 · v1.0 · 2026-06-20 · Generado desde los .md (sincronizado)</div>
+</div>
+<script>
+const questions = [
+{q:"Un modelo de datos conceptual se caracteriza por:",opts:["Ser independiente del SGBD y estar próximo a la visión del usuario", "Describir cómo se almacenan físicamente los datos en disco", "Depender del producto concreto de base de datos elegido"],correct:0,expl:"El modelo conceptual (E-R) es independiente de la tecnología; el lógico depende del tipo de SGBD y el físico, del producto y el soporte.",ref:"§1.1 [ELMASRI]"},
+{q:"En la arquitectura ANSI/SPARC, ¿cuántos esquemas de cada tipo existen?",opts:["Uno externo, varios conceptuales y uno interno", "Uno de cada tipo", "Varios externos, uno conceptual y uno interno"],correct:2,expl:"Puede haber muchas vistas (esquemas externos), pero el esquema conceptual y el interno son únicos.",ref:"§1.2 [ANSI-SPARC]"},
+{q:"El nivel conceptual de la arquitectura ANSI/SPARC contiene:",opts:["Las rutas de acceso, índices y la ubicación física de los datos", "Las vistas particulares de cada grupo de usuarios", "La estructura global de la base de datos: entidades, atributos, relaciones y restricciones"],correct:2,expl:"El nivel conceptual describe toda la base de datos para la comunidad de usuarios, sin detalles de almacenamiento.",ref:"§1.2 [ANSI-SPARC]"},
+{q:"La independencia física de datos permite:",opts:["Cambiar el esquema conceptual sin alterar las vistas", "Cambiar las vistas sin alterar las aplicaciones", "Cambiar el almacenamiento interno sin alterar el esquema conceptual"],correct:2,expl:"La independencia física aísla el nivel conceptual de los cambios en el nivel interno (índices, ficheros).",ref:"§1.3 [DATE]"},
+{q:"¿Cuál de estas afirmaciones sobre la independencia de datos es correcta?",opts:["La independencia lógica es la más difícil de lograr", "La independencia física es la más difícil de lograr", "Ambas son igual de sencillas de conseguir"],correct:0,expl:"La independencia lógica es más difícil porque las vistas dependen directamente del esquema conceptual.",ref:"§1.3 [DATE]"},
+{q:"El \"universo del discurso\" o dominio en el modelado de datos es:",opts:["El conjunto de SGBD disponibles en el mercado", "La parcela de la realidad que se quiere representar", "El lenguaje de programación elegido para la implementación"],correct:1,expl:"El modelo de dominio captura los conceptos del negocio antes de pensar en la solución informática.",ref:"§1.4 [METRICA3]"},
+{q:"El modelado dinámico de un sistema de información se ocupa de:",opts:["Cómo cambia de estado el sistema ante los eventos", "La estructura de los datos y sus relaciones", "Las transformaciones que sufren los datos al fluir entre procesos"],correct:0,expl:"El modelado dinámico (DTE) describe el comportamiento; el estático, los datos (E-R); el funcional, los procesos (DFD).",ref:"§1.5 [RUMBAUGH]"},
+{q:"La técnica clásica del modelado funcional es:",opts:["El modelo entidad-relación (E-R)", "El diagrama de flujo de datos (DFD)", "El diagrama de transición de estados (DTE)"],correct:1,expl:"El DFD modela la vista funcional (procesos); el E-R, la estática (datos); el DTE, la dinámica (comportamiento).",ref:"§1.5 [YOURDON]"},
+{q:"Un dato se convierte en información cuando:",opts:["Se almacena en un fichero binario", "Se procesa y se interpreta dándole significado en un contexto", "Se representa en código ASCII"],correct:1,expl:"El dato es la representación simbólica; la información es el dato procesado e interpretado.",ref:"§1.1 [METRICA3]"},
+{q:"El modelo lógico de datos más extendido es:",opts:["El modelo relacional", "El modelo jerárquico", "El modelo en red (CODASYL)"],correct:0,expl:"El modelo relacional de Codd (tablas) es el dominante en el nivel lógico; el conceptual usa E-R.",ref:"§1.1 [CODD]"},
+{q:"El modelo Entidad-Relación fue propuesto por:",opts:["Peter Chen en 1976", "Edgar F. Codd en 1970", "Tom DeMarco en 1979"],correct:0,expl:"Chen propuso el E-R como vista unificada de los datos. Codd (1970) propuso el modelo relacional; DeMarco (1979), el DFD.",ref:"§2.1 [CHEN]"},
+{q:"En notación de Chen, una entidad se representa mediante:",opts:["Un rombo", "Un rectángulo", "Una elipse"],correct:1,expl:"En Chen: entidad = rectángulo; relación = rombo; atributo = elipse.",ref:"§2.2 [CHEN]"},
+{q:"La diferencia entre un tipo de entidad y una ocurrencia es que:",opts:["El tipo es la plantilla o categoría; la ocurrencia es un ejemplar concreto", "Son sinónimos", "La ocurrencia se dibuja en el diagrama y el tipo no"],correct:0,expl:"El tipo `HABITANTE` se dibuja; las ocurrencias (cada habitante) pueblan la base de datos y no se dibujan.",ref:"§2.2 [ELMASRI]"},
+{q:"Una entidad débil se caracteriza porque:",opts:["No puede identificarse solo con sus atributos y depende de una entidad fuerte", "Tiene pocos atributos", "No participa en ninguna relación"],correct:0,expl:"La entidad débil necesita la clave de la entidad fuerte más un discriminante (clave parcial). Se dibuja con rectángulo doble.",ref:"§2.2 [ELMASRI]"},
+{q:"En notación de Chen, un atributo identificador (clave) se representa:",opts:["Con una elipse doble", "Con una elipse de línea discontinua", "Con la elipse subrayada"],correct:2,expl:"El identificador se subraya; la elipse doble es multivaluado y la discontinua, derivado.",ref:"§2.3 [CHEN]"},
+{q:"Un atributo multivaluado se representa en notación de Chen con:",opts:["Una elipse de línea discontinua", "Un rombo", "Una elipse doble"],correct:2,expl:"El multivaluado (p. ej. varios teléfonos) se dibuja con elipse doble; el derivado, con elipse discontinua.",ref:"§2.3 [CHEN]"},
+{q:"El atributo \"edad\", obtenido a partir de la fecha de nacimiento, es un atributo:",opts:["Compuesto", "Multivaluado", "Derivado (calculado)"],correct:2,expl:"Un atributo derivado se calcula a partir de otros; no se almacena. Se dibuja con elipse discontinua.",ref:"§2.3 [ELMASRI]"},
+{q:"Un atributo compuesto es aquel que:",opts:["Toma varios valores para una misma ocurrencia", "Se descompone en partes con significado propio", "Se calcula a partir de otros atributos"],correct:1,expl:"Ejemplo: `domicilio` = (vía, número, planta, puerta, CP). El que toma varios valores es multivaluado; el calculado, derivado.",ref:"§2.3 [ELMASRI]"},
+{q:"El \"grado\" de una relación es:",opts:["El número máximo de ocurrencias asociadas", "El número de atributos de la relación", "El número de tipos de entidad que participan en ella"],correct:2,expl:"Grado unario (1), binario (2), ternario (3). El máximo de ocurrencias asociadas es la cardinalidad.",ref:"§2.4 [CHEN]"},
+{q:"Una relación en la que una entidad se asocia consigo misma es:",opts:["Ternaria", "Recursiva (unaria)", "De cardinalidad N:M"],correct:1,expl:"Una relación recursiva o unaria liga una entidad consigo misma (p. ej. EMPLEADO supervisa a EMPLEADO).",ref:"§2.4 [ELMASRI]"},
+{q:"La razón de cardinalidad de una relación binaria indica:",opts:["Si la participación es obligatoria u opcional", "El número de atributos de cada entidad", "El número máximo de ocurrencias de una entidad asociadas a una de la otra"],correct:2,expl:"La cardinalidad máxima da los tipos 1:1, 1:N, N:M. La obligatoriedad es la participación (cardinalidad mínima).",ref:"§2.4 [ELMASRI]"},
+{q:"\"Un distrito tiene muchos barrios y cada barrio pertenece a un solo distrito\" es una relación de cardinalidad:",opts:["1:1", "1:N", "N:M"],correct:1,expl:"Un distrito (1) se asocia con muchos barrios (N), pero cada barrio con un solo distrito.",ref:"§2.4 [ELMASRI]"},
+{q:"La participación total de una entidad en una relación significa que:",opts:["Toda ocurrencia de la entidad debe participar en la relación (mínimo 1)", "Alguna ocurrencia puede no participar (mínimo 0)", "Todas las entidades del modelo participan"],correct:0,expl:"La participación total (obligatoria) se dibuja con línea doble en Chen; la parcial es opcional (mínimo 0).",ref:"§2.4 [ELMASRI]"},
+{q:"En la notación (mín, máx), el par (0, N) indica:",opts:["Participación obligatoria y cardinalidad máxima 1", "Participación opcional y cardinalidad máxima muchos", "Participación obligatoria y cardinalidad máxima muchos"],correct:1,expl:"El mínimo 0 indica opcionalidad (parcial); el máximo N indica muchos.",ref:"§2.4 [METRICA3]"},
+{q:"Al transformar una relación N:M al modelo relacional se obtiene:",opts:["Una clave ajena en una de las dos tablas", "Una única tabla que fusiona las dos entidades", "Una tabla intermedia con las claves de ambas entidades"],correct:2,expl:"La N:M genera una tabla cuya clave primaria es la combinación de las claves de las dos entidades, más los atributos de la relación.",ref:"§2.8 [ELMASRI]"},
+{q:"Al transformar una relación 1:N al modelo relacional:",opts:["Se crea siempre una tabla intermedia", "La clave del lado \"1\" se propaga como clave ajena a la tabla del lado \"N\"", "La clave del lado \"N\" se propaga al lado \"1\""],correct:1,expl:"En 1:N, la clave del lado \"1\" pasa como clave ajena al lado \"N\". La tabla intermedia es propia de N:M.",ref:"§2.8 [ELMASRI]"},
+{q:"La relación de generalización/especialización del modelo E-R extendido es del tipo:",opts:["\"parte-de\" (composición)", "\"es-un\" (is-a), con herencia de atributos del supertipo", "\"muchos-a-muchos\""],correct:1,expl:"Los subtipos heredan los atributos comunes del supertipo y añaden los específicos.",ref:"§2.6 [ELMASRI]"},
+{q:"En una jerarquía de especialización, una restricción \"disjunta\" significa que:",opts:["Todo ejemplar del supertipo está en algún subtipo", "Un ejemplar pertenece a un solo subtipo", "Un ejemplar puede pertenecer a varios subtipos a la vez"],correct:1,expl:"Disjunta = un solo subtipo; solapada = varios. La cobertura total/parcial es la otra restricción (¿todo ejemplar está en algún subtipo?).",ref:"§2.6 [ELMASRI]"},
+{q:"En un diagrama de transición de estados, un \"estado\" es:",opts:["Un estímulo que provoca un cambio", "Una situación estable en la que se encuentra el sistema esperando un evento", "Una operación que se ejecuta en la transición"],correct:1,expl:"El estímulo es el evento; la operación es la acción.",ref:"§3.1 [YOURDON]"},
+{q:"El elemento que dispara una transición en un DTE es:",opts:["La acción", "El estado final", "El evento (suceso)"],correct:2,expl:"El evento dispara la transición; la condición (guarda) la habilita; la acción es lo que se ejecuta.",ref:"§3.1 [YOURDON]"},
+{q:"La etiqueta de una transición en un DTE/UML sigue el patrón:",opts:["acción [evento] / condición", "evento [condición] / acción", "condición / evento [acción]"],correct:1,expl:"El evento dispara, la condición (entre corchetes) restringe y la acción se ejecuta.",ref:"§3.1 [UML]"},
+{q:"En un DTE bien construido:",opts:["Hay un único estado inicial y los estados son mutuamente excluyentes", "Puede haber varios estados iniciales", "Los estados pueden solaparse en el tiempo"],correct:0,expl:"El sistema está en un único estado en cada instante; el estado inicial es único, aunque puede haber varios finales.",ref:"§3.2 [YOURDON]"},
+{q:"Una autotransición en un DTE es:",opts:["Una transición sin evento", "Un estado sin salida", "Una transición que vuelve al mismo estado de partida"],correct:2,expl:"Las autotransiciones (mismo estado origen y destino) son válidas.",ref:"§3.2 [UML]"},
+{q:"El DTE clásico equivale formalmente a:",opts:["Una máquina de estados finita", "Una tabla relacional", "Un diagrama de flujo de datos"],correct:0,expl:"El DTE es una máquina de estados finita; UML lo amplía en el diagrama de estados (estados compuestos, regiones concurrentes).",ref:"§3.3 [UML]"},
+{q:"¿Cuál es el equivalente del DTE clásico en UML?",opts:["El diagrama de estados (máquina de estados)", "El diagrama de clases", "El diagrama de actividad"],correct:0,expl:"En UML: E-R ↔ clases; DTE ↔ estados; DFD/flujograma ↔ actividad.",ref:"§3.3 [FOWLER]"},
+{q:"El diagrama de flujo de datos (DFD) modela:",opts:["El orden temporal y las decisiones de un algoritmo", "La estructura estática de los datos", "El sistema como una red de procesos que transforman datos"],correct:2,expl:"El DFD muestra qué transformaciones sufren los datos, sin orden temporal (eso es el flujograma).",ref:"§4.1 [DEMARCO]"},
+{q:"¿Cuáles son los cuatro componentes del DFD?",opts:["Proceso, flujo de datos, almacén y entidad externa", "Estado, transición, evento y acción", "Entidad, atributo, relación y cardinalidad"],correct:0,expl:"El proceso transforma, el flujo es el dato en movimiento, el almacén el dato en reposo y la entidad externa la frontera.",ref:"§4.1 [DEMARCO]"},
+{q:"En un DFD, un almacén de datos (data store) representa:",opts:["Un dato en reposo (fichero, tabla)", "Un dato en movimiento", "Una transformación de datos"],correct:0,expl:"El almacén es el dato en reposo; el flujo, el dato en movimiento; el proceso, la transformación.",ref:"§4.1 [DEMARCO]"},
+{q:"Una entidad externa en un DFD es:",opts:["Un almacén de datos interno", "Un proceso de alto nivel", "Una persona, organización o sistema externo que produce o consume datos"],correct:2,expl:"La entidad externa (terminador) marca la frontera del sistema; se dibuja como rectángulo.",ref:"§4.1 [DEMARCO]"},
+{q:"¿Cuál de estas conexiones está PROHIBIDA en un DFD?",opts:["Un flujo entre una entidad externa y un proceso", "Un flujo directo entre dos almacenes de datos", "Un flujo entre un proceso y un almacén"],correct:1,expl:"Todo flujo debe pasar por un proceso; están prohibidos los flujos directos almacén↔almacén, entidad↔entidad y entidad↔almacén.",ref:"§4.2 [DEMARCO]"},
+{q:"Un proceso de un DFD que solo tiene flujos de entrada y ninguno de salida se denomina, informalmente:",opts:["\"Agujero negro\" (error de modelado)", "\"Milagro\"", "Primitiva funcional"],correct:0,expl:"Un proceso solo con entradas es un \"agujero negro\"; solo con salidas, un \"milagro\". Todo proceso debe tener al menos una entrada y una salida.",ref:"§4.2 [DEMARCO]"},
+{q:"El diagrama de contexto (nivel 0) de un DFD se caracteriza por:",opts:["Mostrar todos los procesos elementales del sistema", "Detallar la lógica interna de cada proceso", "Contener un único proceso que representa todo el sistema, sin almacenes visibles"],correct:2,expl:"El diagrama de contexto (nivel 0) tiene una sola burbuja rodeada de entidades externas y define el alcance del sistema.",ref:"§4.3 [YOURDON]"},
+{q:"La descomposición de un DFD por niveles es un proceso:",opts:["Descendente (top-down), explotando cada proceso en otro más detallado", "Ascendente (bottom-up), de las primitivas al contexto", "Horizontal, sin jerarquía"],correct:0,expl:"Se parte del contexto y se explota cada proceso (1 → 1.1, 1.2…) hasta llegar a primitivas funcionales.",ref:"§4.3 [DEMARCO]"},
+{q:"Un proceso de un DFD que ya no se descompone más se denomina:",opts:["Primitiva funcional", "Entidad externa", "Diagrama de contexto"],correct:0,expl:"La primitiva funcional es el proceso elemental que ya no se descompone y se describe con una mini-spec.",ref:"§4.3 [DEMARCO]"},
+{q:"La regla de equilibrado (balanceo) entre niveles de un DFD exige que:",opts:["Los flujos de entrada/salida de un proceso coincidan con los flujos frontera de su diagrama hijo", "Todos los procesos tengan el mismo número de flujos", "Cada nivel tenga el mismo número de procesos"],correct:0,expl:"El equilibrado garantiza la coherencia: lo que entra y sale del proceso padre debe cruzar la frontera de su explosión.",ref:"§4.3 [DEMARCO]"},
+{q:"El diccionario de datos de un análisis estructurado sirve para:",opts:["Describir la lógica de los procesos primitivos", "Dibujar las cardinalidades del modelo E-R", "Definir rigurosamente cada flujo, almacén y dato elemental del DFD"],correct:2,expl:"El diccionario de datos define los datos con notación `= + { } [ ] ( )`; la lógica de procesos la describe la mini-spec.",ref:"§4.4 [DEMARCO]"},
+{q:"En la notación del diccionario de datos, las llaves { } indican:",opts:["Iteración/repetición", "Selección/alternativa", "Dato opcional"],correct:0,expl:"`{ }` = iteración; `[ | ]` = selección; `( )` = opcional; `+` = concatenación; `=` = se compone de.",ref:"§4.4 [DEMARCO]"},
+{q:"La especificación de procesos (mini-spec o P-SPEC) describe:",opts:["La estructura de los datos almacenados", "Las entidades externas del sistema", "La lógica de los procesos primitivos (con pseudocódigo o tablas de decisión)"],correct:2,expl:"La mini-spec detalla cómo funciona cada proceso que ya no se descompone; aquí enlaza con los flujogramas.",ref:"§4.4 [DEMARCO]"},
+{q:"¿Qué notación de DFD dibuja los procesos como círculos (burbujas)?",opts:["Yourdon/DeMarco", "Gane/Sarson", "Crow's foot (pata de gallo)"],correct:0,expl:"Yourdon/DeMarco usa círculos; Gane/Sarson usa rectángulos de esquinas redondeadas. La pata de gallo es notación E-R, no DFD.",ref:"§4.5 [GANE-SARSON]"},
+{q:"El equivalente UML del DFD/flujograma es, aproximadamente:",opts:["El diagrama de actividad", "El diagrama de clases", "El diagrama de estados"],correct:0,expl:"El diagrama de actividad UML cubre el flujo de control y de objetos, papel parcialmente análogo al DFD y al flujograma.",ref:"§4.5 [UML]"},
+{q:"La principal diferencia entre un DFD y un flujograma es que:",opts:["El DFD muestra el flujo de control (orden y decisiones) y el flujograma, el flujo de datos", "El flujograma muestra el flujo de control y el DFD, el flujo de datos sin secuencia temporal", "Son notaciones idénticas con distinto nombre"],correct:1,expl:"El DFD modela transformaciones de datos; el flujograma, la secuencia y las decisiones (control).",ref:"§5.1 [ISO5807]"},
+{q:"¿Qué norma internacional normaliza los símbolos de los diagramas de flujo?",opts:["ISO 9001", "ISO/IEC 27001", "ISO 5807:1985"],correct:2,expl:"ISO 5807 (heredera de ANSI X3.5) normaliza los símbolos de los flujogramas.",ref:"§5.2 [ISO5807]"},
+{q:"En un flujograma, el símbolo de decisión (bifurcación según condición) es:",opts:["Un rectángulo", "Un rombo", "Un óvalo"],correct:1,expl:"El rombo representa la decisión y es el único símbolo con varias salidas (las ramas de la condición). El rectángulo es proceso; el óvalo, terminal.",ref:"§5.2 [ISO5807]"},
+{q:"El símbolo de terminal (inicio/fin) de un flujograma es:",opts:["Un paralelogramo (romboide)", "Un óvalo o rectángulo redondeado", "Un rombo"],correct:1,expl:"El terminal (inicio/fin) es un óvalo; el romboide es entrada/salida; el rombo, decisión.",ref:"§5.2 [ISO5807]"},
+{q:"El símbolo romboide (paralelogramo) en un flujograma representa:",opts:["Una decisión", "Una operación de entrada/salida de datos", "El inicio del proceso"],correct:1,expl:"El romboide es E/S (lectura/escritura). La decisión es el rombo; el inicio, el óvalo terminal.",ref:"§5.2 [ISO5807]"},
+{q:"El teorema de Böhm-Jacopini establece que todo algoritmo puede expresarse con:",opts:["Únicamente secuencia y saltos goto", "Secuencia, selección e iteración, sin saltos incondicionales (goto)", "Recursividad y punteros"],correct:1,expl:"Es el fundamento de la programación estructurada: tres estructuras de control bastan, sin goto.",ref:"§5.3 [BOHM-JACOPINI]"},
+{q:"La diferencia entre el bucle \"mientras\" (while) y \"repetir-hasta\" (do-until) es:",opts:["\"Mientras\" comprueba la condición antes (0 o más veces); \"repetir-hasta\", después (1 o más veces)", "\"Mientras\" comprueba la condición después; \"repetir-hasta\", antes", "Ambos comprueban la condición exactamente igual"],correct:0,expl:"El while puede no ejecutar el cuerpo ninguna vez; el do-until lo ejecuta al menos una.",ref:"§5.3 [BOHM-JACOPINI]"},
+{q:"En la terminología española de diagramas, un \"ordinograma\" es:",opts:["El diagrama de alto nivel de los módulos del sistema", "El diagrama de flujo detallado de la lógica de un programa", "El organigrama de cargos de la organización"],correct:1,expl:"El ordinograma es el flujograma de detalle; el organigrama (de proceso) es la visión de conjunto de los módulos.",ref:"§5.5 [METRICA3]"},
+{q:"¿A qué familia de diagramas UML pertenece el diagrama de clases?",opts:["Diagramas de comportamiento", "Diagramas de estructura", "Diagramas de interacción"],correct:1,expl:"El diagrama de clases es de estructura (vista estática) y es el equivalente moderno del modelo E-R. Casos de uso, actividad, estados y secuencia son de comportamiento.",ref:"§5.6 [UML]"},
+{q:"¿Cuál es el equivalente UML del modelo Entidad-Relación?",opts:["El diagrama de casos de uso", "El diagrama de actividad", "El diagrama de clases"],correct:2,expl:"El diagrama de clases (estructura) es el equivalente del E-R: clases ↔ entidades, asociaciones ↔ relaciones, multiplicidad ↔ cardinalidad.",ref:"§5.6 [UML]"}
+];
+
+function renderQuestions(){
+  const c=document.getElementById('test-container');
+  c.innerHTML=questions.map((q,i)=>`
+    <div class="question" data-q="${i}">
+      <div class="q-num">Pregunta ${i+1}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-options">${q.opts.map((o,j)=>`<div class="q-opt" data-opt="${j}" onclick="selectOption(${i},${j})"><div class="q-letter">${String.fromCharCode(65+j)}</div><div>${o}</div></div>`).join('')}</div>
+      <div class="q-answer"><strong>Correcta: ${String.fromCharCode(65+q.correct)}) ${q.opts[q.correct]}</strong><br>${q.expl}<div class="q-ref">Referencia: ${q.ref}</div></div>
+    </div>`).join('');
+}
+const answers={};
+function selectOption(qi,oi){answers[qi]=oi;const q=document.querySelector(`[data-q="${qi}"]`);q.querySelectorAll('.q-opt').forEach(e=>e.classList.remove('selected'));q.querySelector(`[data-opt="${oi}"]`).classList.add('selected');updateScore();}
+function correctAll(){questions.forEach((q,i)=>{const el=document.querySelector(`[data-q="${i}"]`);el.querySelectorAll('.q-opt').forEach((e,j)=>{e.classList.remove('selected','correct','wrong');if(j===q.correct)e.classList.add('correct');else if(answers[i]===j)e.classList.add('wrong');});el.querySelector('.q-answer').classList.add('show');});}
+function resetTest(){Object.keys(answers).forEach(k=>delete answers[k]);document.querySelectorAll('.q-opt').forEach(e=>e.classList.remove('selected','correct','wrong'));document.querySelectorAll('.q-answer').forEach(e=>e.classList.remove('show'));updateScore();}
+function updateScore(){const r=Object.keys(answers).length;const ok=Object.entries(answers).filter(([i,v])=>questions[i].correct===v).length;const w=r-ok;document.getElementById('s-resp').textContent=r;document.getElementById('s-correct').textContent=ok;document.getElementById('s-wrong').textContent=w;document.getElementById('s-score').textContent=Math.max(0,ok-w/3).toFixed(2);}
+function showTab(name,btn){document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(e=>e.classList.remove('active'));const t=document.getElementById('tab-'+name);if(t)t.classList.add('active');if(btn)btn.classList.add('active');try{window.scrollTo(0,0);}catch(e){}}
+function initTabs(){document.querySelectorAll('.tab-btn[data-tab]').forEach(b=>b.addEventListener('click',function(){showTab(this.dataset.tab,this);}));try{renderQuestions();}catch(e){console.error(e);}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initTabs);else initTabs();
+
+</script>
+</body>
+</html>

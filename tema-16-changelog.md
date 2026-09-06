@@ -4,6 +4,22 @@
 
 ---
 
+## v1.2 — 2026-09-06 — Ajuste a la literalidad del título
+
+**Estado**: pendiente de validación por el IAM.
+
+**Motivo**: criterio de literalidad del título fijado por el IAM (Jesús Cuadrado, 02-09-2026). El título oficial enumera **siete** materias y el tema tenía **cinco** secciones que no se correspondían con ellas. El guion de partida agrupaba todo el tema en un solo bloque de primer nivel, que es de donde venía el desajuste.
+
+### Alcance
+
+- El tema pasa de **5 a 8 secciones**. Las **siete primeras son las siete materias del título**, en su orden y con sus palabras: modelo conceptual de datos · entidades, atributos y relaciones · reglas de modelización · diagramas de flujo de datos · reglas de construcción · descomposición en niveles · flujogramas.
+- «Reglas de construcción» y «Descomposición en niveles» pasan a **sección propia** aunque no se subdividan: el título las enumera como materias sueltas.
+- El **modelado dinámico (DTE)**, que el título no nombra, pasa al final como **sección 8 marcada como material complementario**, con el mismo criterio aplicado a los otros apartados de la serie que el temario no recoge.
+- **No se ha reescrito contenido**: se ha reorganizado y renumerado. Las **127 referencias internas** (contenido, diagramas, test, índice y validación) se renumeraron en una sola pasada y se verificaron después: ninguna apunta a un epígrafe inexistente.
+- Renumerado con `_tools-qa/renumera.py`.
+
+---
+
 ## v1.1 — 2026-09-06 — Ficha de extensión y tiempo de estudio
 
 **Estado**: sin cambios de contenido. Solo se añade información sobre el propio tema.

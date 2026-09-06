@@ -437,7 +437,7 @@ C) Una única tabla que fusiona las dos entidades
 
 **Correcta: B) Una tabla intermedia con las claves de ambas entidades** La N:M genera una tabla cuya clave primaria es la combinación de las claves de las dos entidades, más los atributos de la relación.
 
-*Referencia: §2.8 [ELMASRI]*
+*Referencia: §3.4 [ELMASRI]*
 </details>
 
 ---
@@ -454,7 +454,7 @@ C) La clave del lado "N" se propaga al lado "1"
 
 **Correcta: A) La clave del lado "1" se propaga como clave ajena a la tabla del lado "N"** En 1:N, la clave del lado "1" pasa como clave ajena al lado "N". La tabla intermedia es propia de N:M.
 
-*Referencia: §2.8 [ELMASRI]*
+*Referencia: §3.4 [ELMASRI]*
 </details>
 
 ---
@@ -471,7 +471,7 @@ C) "muchos-a-muchos"
 
 **Correcta: B) "es-un" (is-a), con herencia de atributos del supertipo** Los subtipos heredan los atributos comunes del supertipo y añaden los específicos.
 
-*Referencia: §2.6 [ELMASRI]*
+*Referencia: §3.2 [ELMASRI]*
 </details>
 
 ---
@@ -488,7 +488,7 @@ C) Un ejemplar pertenece a un solo subtipo
 
 **Correcta: C) Un ejemplar pertenece a un solo subtipo** Disjunta = un solo subtipo; solapada = varios. La cobertura total/parcial es la otra restricción (¿todo ejemplar está en algún subtipo?).
 
-*Referencia: §2.6 [ELMASRI]*
+*Referencia: §3.2 [ELMASRI]*
 </details>
 
 ---
@@ -505,7 +505,7 @@ C) Una operación que se ejecuta en la transición
 
 **Correcta: B) Una situación estable en la que se encuentra el sistema esperando un evento** El estímulo es el evento; la operación es la acción.
 
-*Referencia: §3.1 [YOURDON]*
+*Referencia: §8.1 [YOURDON]*
 </details>
 
 ---
@@ -522,7 +522,7 @@ C) El estado final
 
 **Correcta: A) El evento (suceso)** El evento dispara la transición; la condición (guarda) la habilita; la acción es lo que se ejecuta.
 
-*Referencia: §3.1 [YOURDON]*
+*Referencia: §8.1 [YOURDON]*
 </details>
 
 ---
@@ -539,7 +539,7 @@ C) condición / evento [acción]
 
 **Correcta: B) evento [condición] / acción** El evento dispara, la condición (entre corchetes) restringe y la acción se ejecuta.
 
-*Referencia: §3.1 [UML]*
+*Referencia: §8.1 [UML]*
 </details>
 
 ---
@@ -556,7 +556,7 @@ C) Los estados pueden solaparse en el tiempo
 
 **Correcta: B) Hay un único estado inicial y los estados son mutuamente excluyentes** El sistema está en un único estado en cada instante; el estado inicial es único, aunque puede haber varios finales.
 
-*Referencia: §3.2 [YOURDON]*
+*Referencia: §8.2 [YOURDON]*
 </details>
 
 ---
@@ -573,7 +573,7 @@ C) Un estado sin salida
 
 **Correcta: A) Una transición que vuelve al mismo estado de partida** Las autotransiciones (mismo estado origen y destino) son válidas.
 
-*Referencia: §3.2 [UML]*
+*Referencia: §8.2 [UML]*
 </details>
 
 ---
@@ -590,7 +590,7 @@ C) Un diagrama de flujo de datos
 
 **Correcta: B) Una máquina de estados finita** El DTE es una máquina de estados finita; UML lo amplía en el diagrama de estados (estados compuestos, regiones concurrentes).
 
-*Referencia: §3.3 [UML]*
+*Referencia: §8.3 [UML]*
 </details>
 
 ---
@@ -607,7 +607,7 @@ C) El diagrama de estados (máquina de estados)
 
 **Correcta: C) El diagrama de estados (máquina de estados)** En UML: E-R ↔ clases; DTE ↔ estados; DFD/flujograma ↔ actividad.
 
-*Referencia: §3.3 [FOWLER]*
+*Referencia: §8.3 [FOWLER]*
 </details>
 
 ---
@@ -692,7 +692,7 @@ C) Un flujo entre un proceso y un almacén
 
 **Correcta: A) Un flujo directo entre dos almacenes de datos** Todo flujo debe pasar por un proceso; están prohibidos los flujos directos almacén↔almacén, entidad↔entidad y entidad↔almacén.
 
-*Referencia: §4.2 [DEMARCO]*
+*Referencia: §5 [DEMARCO]*
 </details>
 
 ---
@@ -709,7 +709,7 @@ C) Primitiva funcional
 
 **Correcta: B) "Agujero negro" (error de modelado)** Un proceso solo con entradas es un "agujero negro"; solo con salidas, un "milagro". Todo proceso debe tener al menos una entrada y una salida.
 
-*Referencia: §4.2 [DEMARCO]*
+*Referencia: §5 [DEMARCO]*
 </details>
 
 ---
@@ -726,7 +726,7 @@ C) Detallar la lógica interna de cada proceso
 
 **Correcta: A) Contener un único proceso que representa todo el sistema, sin almacenes visibles** El diagrama de contexto (nivel 0) tiene una sola burbuja rodeada de entidades externas y define el alcance del sistema.
 
-*Referencia: §4.3 [YOURDON]*
+*Referencia: §6 [YOURDON]*
 </details>
 
 ---
@@ -743,7 +743,7 @@ C) Horizontal, sin jerarquía
 
 **Correcta: B) Descendente (top-down), explotando cada proceso en otro más detallado** Se parte del contexto y se explota cada proceso (1 → 1.1, 1.2…) hasta llegar a primitivas funcionales.
 
-*Referencia: §4.3 [DEMARCO]*
+*Referencia: §6 [DEMARCO]*
 </details>
 
 ---
@@ -760,7 +760,7 @@ C) Primitiva funcional
 
 **Correcta: C) Primitiva funcional** La primitiva funcional es el proceso elemental que ya no se descompone y se describe con una mini-spec.
 
-*Referencia: §4.3 [DEMARCO]*
+*Referencia: §6 [DEMARCO]*
 </details>
 
 ---
@@ -777,7 +777,7 @@ C) Cada nivel tenga el mismo número de procesos
 
 **Correcta: B) Los flujos de entrada/salida de un proceso coincidan con los flujos frontera de su diagrama hijo** El equilibrado garantiza la coherencia: lo que entra y sale del proceso padre debe cruzar la frontera de su explosión.
 
-*Referencia: §4.3 [DEMARCO]*
+*Referencia: §6 [DEMARCO]*
 </details>
 
 ---
@@ -794,7 +794,7 @@ C) Dibujar las cardinalidades del modelo E-R
 
 **Correcta: A) Definir rigurosamente cada flujo, almacén y dato elemental del DFD** El diccionario de datos define los datos con notación `= + { } [ ] ( )`; la lógica de procesos la describe la mini-spec.
 
-*Referencia: §4.4 [DEMARCO]*
+*Referencia: §4.2 [DEMARCO]*
 </details>
 
 ---
@@ -811,7 +811,7 @@ C) Dato opcional
 
 **Correcta: B) Iteración/repetición** `{ }` = iteración; `[ | ]` = selección; `( )` = opcional; `+` = concatenación; `=` = se compone de.
 
-*Referencia: §4.4 [DEMARCO]*
+*Referencia: §4.2 [DEMARCO]*
 </details>
 
 ---
@@ -828,7 +828,7 @@ C) Las entidades externas del sistema
 
 **Correcta: B) La lógica de los procesos primitivos (con pseudocódigo o tablas de decisión)** La mini-spec detalla cómo funciona cada proceso que ya no se descompone; aquí enlaza con los flujogramas.
 
-*Referencia: §4.4 [DEMARCO]*
+*Referencia: §4.2 [DEMARCO]*
 </details>
 
 ---
@@ -845,7 +845,7 @@ C) Crow's foot (pata de gallo)
 
 **Correcta: B) Yourdon/DeMarco** Yourdon/DeMarco usa círculos; Gane/Sarson usa rectángulos de esquinas redondeadas. La pata de gallo es notación E-R, no DFD.
 
-*Referencia: §4.5 [GANE-SARSON]*
+*Referencia: §4.3 [GANE-SARSON]*
 </details>
 
 ---
@@ -862,7 +862,7 @@ C) El diagrama de actividad
 
 **Correcta: C) El diagrama de actividad** El diagrama de actividad UML cubre el flujo de control y de objetos, papel parcialmente análogo al DFD y al flujograma.
 
-*Referencia: §4.5 [UML]*
+*Referencia: §4.3 [UML]*
 </details>
 
 ---
@@ -879,7 +879,7 @@ C) Son notaciones idénticas con distinto nombre
 
 **Correcta: B) El flujograma muestra el flujo de control y el DFD, el flujo de datos sin secuencia temporal** El DFD modela transformaciones de datos; el flujograma, la secuencia y las decisiones (control).
 
-*Referencia: §5.1 [ISO5807]*
+*Referencia: §7.1 [ISO5807]*
 </details>
 
 ---
@@ -896,7 +896,7 @@ C) ISO/IEC 27001
 
 **Correcta: A) ISO 5807:1985** ISO 5807 (heredera de ANSI X3.5) normaliza los símbolos de los flujogramas.
 
-*Referencia: §5.2 [ISO5807]*
+*Referencia: §7.2 [ISO5807]*
 </details>
 
 ---
@@ -913,7 +913,7 @@ C) Un rombo
 
 **Correcta: C) Un rombo** El rombo representa la decisión y es el único símbolo con varias salidas (las ramas de la condición). El rectángulo es proceso; el óvalo, terminal.
 
-*Referencia: §5.2 [ISO5807]*
+*Referencia: §7.2 [ISO5807]*
 </details>
 
 ---
@@ -930,7 +930,7 @@ C) Un rombo
 
 **Correcta: A) Un óvalo o rectángulo redondeado** El terminal (inicio/fin) es un óvalo; el romboide es entrada/salida; el rombo, decisión.
 
-*Referencia: §5.2 [ISO5807]*
+*Referencia: §7.2 [ISO5807]*
 </details>
 
 ---
@@ -947,7 +947,7 @@ C) El inicio del proceso
 
 **Correcta: B) Una operación de entrada/salida de datos** El romboide es E/S (lectura/escritura). La decisión es el rombo; el inicio, el óvalo terminal.
 
-*Referencia: §5.2 [ISO5807]*
+*Referencia: §7.2 [ISO5807]*
 </details>
 
 ---
@@ -964,7 +964,7 @@ C) Recursividad y punteros
 
 **Correcta: A) Secuencia, selección e iteración, sin saltos incondicionales (goto)** Es el fundamento de la programación estructurada: tres estructuras de control bastan, sin goto.
 
-*Referencia: §5.3 [BOHM-JACOPINI]*
+*Referencia: §7.3 [BOHM-JACOPINI]*
 </details>
 
 ---
@@ -981,7 +981,7 @@ C) Ambos comprueban la condición exactamente igual
 
 **Correcta: B) "Mientras" comprueba la condición antes (0 o más veces); "repetir-hasta", después (1 o más veces)** El while puede no ejecutar el cuerpo ninguna vez; el do-until lo ejecuta al menos una.
 
-*Referencia: §5.3 [BOHM-JACOPINI]*
+*Referencia: §7.3 [BOHM-JACOPINI]*
 </details>
 
 ---
@@ -998,7 +998,7 @@ C) El organigrama de cargos de la organización
 
 **Correcta: B) El diagrama de flujo detallado de la lógica de un programa** El ordinograma es el flujograma de detalle; el organigrama (de proceso) es la visión de conjunto de los módulos.
 
-*Referencia: §5.5 [METRICA3]*
+*Referencia: §7.5 [METRICA3]*
 </details>
 
 ---
@@ -1015,7 +1015,7 @@ C) Diagramas de interacción
 
 **Correcta: B) Diagramas de estructura** El diagrama de clases es de estructura (vista estática) y es el equivalente moderno del modelo E-R. Casos de uso, actividad, estados y secuencia son de comportamiento.
 
-*Referencia: §5.6 [UML]*
+*Referencia: §7.6 [UML]*
 </details>
 
 ---
@@ -1032,5 +1032,5 @@ C) El diagrama de clases
 
 **Correcta: C) El diagrama de clases** El diagrama de clases (estructura) es el equivalente del E-R: clases ↔ entidades, asociaciones ↔ relaciones, multiplicidad ↔ cardinalidad.
 
-*Referencia: §5.6 [UML]*
+*Referencia: §7.6 [UML]*
 </details>

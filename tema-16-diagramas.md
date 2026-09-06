@@ -20,12 +20,12 @@
 | D4 | Las tres vistas del modelado | §1.5 | Mapa |
 | D5 | Notación de Chen: entidad, atributo y relación | §2.3 | Estructura |
 | D6 | Cardinalidades 1:1, 1:N y N:M | §2.4 | Comparativa |
-| D7 | Generalización / especialización (jerarquía es-un) | §2.6 | Jerarquía |
-| D8 | Tres notaciones E-R: Chen, pata de gallo y UML | §2.7 | Comparativa |
-| D9 | Diagrama de transición de estados (expediente) | §3.1 | Estados |
+| D7 | Generalización / especialización (jerarquía es-un) | §3.2 | Jerarquía |
+| D8 | Tres notaciones E-R: Chen, pata de gallo y UML | §3.3 | Comparativa |
+| D9 | Diagrama de transición de estados (expediente) | §8.1 | Estados |
 | D10 | Componentes del DFD | §4.1 | Bloques |
-| D11 | Descomposición del DFD por niveles + equilibrado | §4.3 | Niveles |
-| D12 | Flujograma: símbolos ISO 5807 y estructuras básicas | §5.2 | Símbolos |
+| D11 | Descomposición del DFD por niveles + equilibrado | §6 | Niveles |
+| D12 | Flujograma: símbolos ISO 5807 y estructuras básicas | §7.2 | Símbolos |
 
 ---
 
@@ -206,7 +206,7 @@
 
 ## D7 · Generalización / especialización (jerarquía es-un)
 
-**Sección**: §2.6 — EER · **Propósito**: Mostrar el supertipo, los subtipos y las restricciones (disjunta/solapada, total/parcial).
+**Sección**: §3.2 — EER · **Propósito**: Mostrar el supertipo, los subtipos y las restricciones (disjunta/solapada, total/parcial).
 
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 280" role="img" aria-label="Jerarquía de generalización: supertipo PERSONAL con subtipos FUNCIONARIO y LABORAL">
@@ -230,7 +230,7 @@
 
 ## D8 · Tres notaciones E-R: Chen, pata de gallo y UML
 
-**Sección**: §2.7 — Notaciones equivalentes · **Propósito**: Comparar cómo cada notación dibuja la misma relación 1:N.
+**Sección**: §3.3 — Notaciones equivalentes · **Propósito**: Comparar cómo cada notación dibuja la misma relación 1:N.
 
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 300" role="img" aria-label="La misma relación uno a muchos dibujada en notación Chen, pata de gallo y UML">
@@ -267,7 +267,7 @@
 
 ## D9 · Diagrama de transición de estados (expediente)
 
-**Sección**: §3.1 — Modelado dinámico · **Propósito**: Ilustrar estados, transiciones y eventos con el ciclo de vida de un expediente.
+**Sección**: §8.1 — Modelado dinámico · **Propósito**: Ilustrar estados, transiciones y eventos con el ciclo de vida de un expediente.
 
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 290" role="img" aria-label="Diagrama de transición de estados del ciclo de vida de un expediente administrativo">
@@ -330,7 +330,7 @@
 
 ## D11 · Descomposición del DFD por niveles + equilibrado
 
-**Sección**: §4.3 — Niveles y balanceo · **Propósito**: Mostrar contexto (nivel 0), nivel 1 y explosión, y la regla de equilibrado.
+**Sección**: §6 — Niveles y balanceo · **Propósito**: Mostrar contexto (nivel 0), nivel 1 y explosión, y la regla de equilibrado.
 
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 330" role="img" aria-label="Descomposición del DFD: diagrama de contexto nivel 0, nivel 1 y explosión de un proceso con equilibrado de flujos">
@@ -374,7 +374,7 @@
 
 ## D12 · Flujograma: símbolos ISO 5807 y estructuras básicas
 
-**Sección**: §5.2 — Símbolos y control · **Propósito**: Recoger los símbolos normalizados y las tres estructuras de la programación estructurada.
+**Sección**: §7.2 — Símbolos y control · **Propósito**: Recoger los símbolos normalizados y las tres estructuras de la programación estructurada.
 
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 340" role="img" aria-label="Símbolos de flujograma ISO 5807 y las tres estructuras básicas: secuencia, selección e iteración">

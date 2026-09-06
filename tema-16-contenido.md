@@ -26,7 +26,7 @@ Las fuentes se referencian con etiquetas breves tipo `[CHEN]` o `[ELMASRI, cap. 
 
 ---
 
-## 1. El modelado de sistemas de información
+## 1. Modelo conceptual de datos
 
 ### 1.1. Concepto de modelo, dato y modelo de datos
 
@@ -90,7 +90,7 @@ Un sistema de información se describe desde **tres perspectivas complementarias
 
 ---
 
-## 2. Modelado estático: el modelo Entidad-Relación (E-R)
+## 2. Entidades, atributos y relaciones
 
 ### 2.1. Origen y propósito
 
@@ -151,7 +151,9 @@ La notación **(mín, máx)** combina ambas: junto a cada entidad se anota el pa
 > **[EJERCICIO RESUELTO]** *Modela: «Un distrito tiene muchos barrios; cada barrio pertenece a un único distrito; todo barrio pertenece obligatoriamente a un distrito y todo distrito tiene al menos un barrio».*
 > Entidades: `DISTRITO`, `BARRIO`. Relación: `CONTIENE` (rombo). Cardinalidad: **1:N** (un distrito, muchos barrios). Participación: **total en ambos lados** (todo barrio tiene distrito → total en BARRIO; todo distrito tiene ≥1 barrio → total en DISTRITO). En notación (mín,máx): DISTRITO `(1,N)`, BARRIO `(1,1)`.
 
-### 2.5. Reglas de modelización y construcción del diagrama E-R
+## 3. Reglas de modelización
+
+### 3.1. Reglas de modelización y construcción del diagrama E-R
 
 Construir un buen modelo E-R sigue un proceso y unas reglas heurísticas: [ELMASRI, cap. 3][METRICA3]
 
@@ -170,7 +172,7 @@ Reglas de buena construcción (errores típicos a evitar):
 - Un atributo que solo tiene sentido para la combinación de dos entidades pertenece a la **relación**, no a una entidad.
 - Nombrar entidades en **singular** y relaciones con un **verbo**.
 
-### 2.6. Técnicas de descomposición: generalización/especialización, agregación y asociación
+### 3.2. Técnicas de descomposición: generalización/especialización, agregación y asociación
 
 El **modelo E-R extendido (EER)** añade construcciones semánticas para casos complejos: [ELMASRI, cap. 4]
 
@@ -184,7 +186,7 @@ El **modelo E-R extendido (EER)** añade construcciones semánticas para casos c
 
 > **[REFERENCIA CRUZADA]** La jerarquía de generalización/especialización del EER es el antecedente directo de la **herencia** en la **Programación Orientada a Objetos** (Tema 20). Un supertipo E-R ↔ una superclase; un subtipo ↔ una subclase que hereda y extiende.
 
-### 2.7. Notaciones: Chen, pata de gallo y UML
+### 3.3. Notaciones: Chen, pata de gallo y UML
 
 La misma semántica E-R se dibuja con notaciones distintas; conviene reconocerlas todas: [SILBERSCHATZ][MARTIN]
 
@@ -202,7 +204,7 @@ La misma semántica E-R se dibuja con notaciones distintas; conviene reconocerla
 
 > **[DATO CLAVE EXAMEN]** En **pata de gallo**, los símbolos se leen *junto a la entidad del extremo*: «||» = uno y solo uno; «o<» = cero o muchos; «|<» = uno o muchos. Es la notación que generan casi todas las herramientas (ERwin, MySQL Workbench…). UML usa **multiplicidad** numérica (`0..1`, `1..*`).
 
-### 2.8. Del modelo E-R al modelo relacional
+### 3.4. Del modelo E-R al modelo relacional
 
 El modelo conceptual E-R se **transforma** en un modelo lógico relacional siguiendo reglas mecánicas (este paso pertenece al diseño lógico, Tema 17, pero conviene conocerlo): [ELMASRI, cap. 9][CODD]
 
@@ -217,41 +219,7 @@ El modelo conceptual E-R se **transforma** en un modelo lógico relacional sigui
 
 ---
 
-## 3. Modelado dinámico: el diagrama de transición de estados (DTE)
-
-### 3.1. Estados, transiciones, eventos, condiciones y acciones
-
-El **modelado dinámico** describe el **comportamiento** del sistema a lo largo del tiempo: cómo reacciona ante los **eventos** y cómo va cambiando de **estado**. La técnica clásica es el **diagrama de transición de estados (DTE)**, una máquina de estados finita. [YOURDON][RUMBAUGH] Sus elementos:
-
-- **Estado**: situación estable en la que se encuentra un objeto o el sistema durante un intervalo, esperando un evento. Se dibuja como un **rectángulo redondeado**. Hay un **estado inicial** (círculo relleno) y, opcionalmente, **estados finales** (círculo con borde).
-- **Transición**: paso de un estado a otro. Se dibuja como una **flecha** etiquetada.
-- **Evento (suceso)**: estímulo que dispara una transición (la llegada de un dato, una acción del usuario, el vencimiento de un plazo).
-- **Condición (guarda)**: predicado que debe cumplirse para que la transición ocurra. Se escribe entre corchetes `[condición]`.
-- **Acción**: operación que se ejecuta al producirse la transición (o al entrar/salir de un estado).
-
-La etiqueta de una transición sigue el patrón **`evento [condición] / acción`**.
-
-> **[EJEMPLO AYTO MADRID]** El ciclo de vida de un **expediente administrativo** en la sede electrónica es un DTE natural: estados `INICIADO` → `EN_TRAMITACIÓN` → `PENDIENTE_SUBSANACIÓN` → `RESUELTO` → `NOTIFICADO` → `ARCHIVADO`. El evento «presentar alegación» con condición `[plazo abierto]` dispara la transición a `EN_TRAMITACIÓN`; la acción asociada es «registrar entrada».
-
-### 3.2. Reglas de construcción del DTE
-
-- Todo diagrama tiene **un único estado inicial** y puede tener varios finales.
-- Cada **transición** parte de un estado y llega a un estado (posiblemente el mismo: *autotransición*).
-- Una transición se etiqueta con el **evento** que la dispara; sin evento no hay cambio de estado.
-- Los estados deben ser **mutuamente excluyentes**: el sistema está en uno y solo uno en cada instante.
-- No deben existir **estados inalcanzables** (sin transición de entrada) ni **callejones sin salida** no deseados (estados sin salida que no sean finales).
-
-> **[DATO CLAVE EXAMEN]** En un DTE/máquina de estados: **un estado inicial**, **estados mutuamente excluyentes**, **transiciones disparadas por eventos**. Etiqueta de transición: `evento [guarda] / acción`. Las autotransiciones (vuelven al mismo estado) son válidas.
-
-### 3.3. Equivalencia con las máquinas de estados y UML
-
-El DTE clásico equivale a una **máquina de estados finita**. UML lo recoge y amplía en el **diagrama de estados (state machine diagram)**, que añade: estados compuestos (anidados), regiones concurrentes, acciones de entrada/salida (`entry/`, `exit/`), actividades internas (`do/`) y pseudoestados (histórico, unión, decisión). [UML][FOWLER]
-
-> **[REFERENCIA CRUZADA]** Las máquinas de estados son también la base de muchos **algoritmos** (Tema 13) y del análisis léxico de **lenguajes** (Tema 18). Un autómata finito determinista es, formalmente, un DTE sin acciones.
-
----
-
-## 4. Modelado funcional: el diagrama de flujo de datos (DFD)
+## 4. Diagramas de flujo de datos
 
 ### 4.1. Componentes del DFD
 
@@ -264,7 +232,33 @@ El **diagrama de flujo de datos (DFD)** modela el sistema como una **red de proc
 
 > **[DATO CLAVE EXAMEN]** Los **cuatro** componentes del DFD: **proceso** (transforma), **flujo** (dato en movimiento), **almacén** (dato en reposo) y **entidad externa** (frontera del sistema). Es la pregunta más repetida del epígrafe. El DFD modela *función*, **no** secuencia temporal ni decisiones (eso es el flujograma).
 
-### 4.2. Reglas de construcción del DFD
+### 4.2. Diccionario de datos y especificación de procesos
+
+El DFD se acompaña de dos artefactos que completan el modelo funcional: [DEMARCO]
+
+- **Diccionario de datos (DD)**: repositorio que **define** rigurosamente cada flujo, almacén y dato elemental del DFD, usando una notación de composición:
+  - `=` (se compone de), `+` (y/concatenación), `{ }` (iteración/repetición), `[ | ]` (selección/alternativa), `( )` (opcional).
+  - P. ej.: `solicitud = nº_registro + fecha + datos_solicitante + [presencial | telemática]`.
+- **Especificación de procesos (mini-spec o P-SPEC)**: describe la **lógica** de cada proceso **primitivo** (los que ya no se descomponen), mediante **pseudocódigo**, **tablas de decisión** o **lenguaje estructurado**. Aquí es donde el modelado funcional enlaza con los **flujogramas**.
+
+> **[DATO CLAVE EXAMEN]** El **diccionario de datos** define los datos (con `= + { } [ ] ( )`); la **mini-spec** define la lógica de los procesos primitivos. Juntos, DFD + DD + mini-specs forman el **modelo de procesos** completo del análisis estructurado.
+
+### 4.3. Notaciones: Yourdon/DeMarco frente a Gane/Sarson
+
+| Componente | Yourdon / DeMarco | Gane / Sarson |
+|---|---|---|
+| Proceso | Círculo (burbuja) | Rectángulo de esquinas redondeadas |
+| Flujo de datos | Flecha curva | Flecha recta |
+| Almacén | Dos líneas paralelas abiertas | Rectángulo abierto por la derecha |
+| Entidad externa | Rectángulo | Rectángulo (a veces con sombra) |
+
+Ambas notaciones son **semánticamente equivalentes**; la elección es de estilo o de la herramienta CASE. En UML, el papel del DFD lo cubre parcialmente el **diagrama de actividad** (flujo de acciones y objetos). [UML]
+
+> **[REFERENCIA CRUZADA]** El DFD describe *qué* hace el sistema con los datos; las estructuras de esos datos en reposo (los almacenes) se diseñan con el **modelo E-R** (§2) y acaban en un **SGBD** (Tema 15). DFD (procesos) y E-R (datos) son las dos caras del análisis estructurado.
+
+---
+
+## 5. Reglas de construcción
 
 El análisis estructurado fija reglas estrictas de buena formación: [DEMARCO][GANE-SARSON]
 
@@ -276,7 +270,7 @@ El análisis estructurado fija reglas estrictas de buena formación: [DEMARCO][G
 
 > **[DATO CLAVE EXAMEN]** Reglas «negativas» del DFD que más se preguntan: **no** hay flujo directo almacén↔almacén, entidad↔entidad, ni entidad↔almacén; **siempre** media un proceso. Y todo proceso debe tener **al menos una entrada y una salida** (ni «agujero negro» ni «milagro»).
 
-### 4.3. Descomposición en niveles
+## 6. Descomposición en niveles
 
 Un sistema real no cabe en un solo diagrama. El DFD se construye **por niveles**, mediante **descomposición funcional descendente** (top-down), explotando cada proceso en un diagrama más detallado: [DEMARCO][YOURDON]
 
@@ -293,41 +287,15 @@ La regla que garantiza la coherencia entre niveles es el **equilibrado (balanceo
 > **Nivel 1**: procesos «1 Liquidar tributo», «2 Emitir recibo», «3 Registrar cobro», con almacenes `D1 Liquidaciones`, `D2 Cobros`.
 > **Nivel 2**: «1 Liquidar tributo» se explota en «1.1 Calcular base imponible», «1.2 Aplicar tipo», «1.3 Generar liquidación». Se comprueba el **equilibrado**: los flujos que entran/salen de «1» en el nivel 1 son los mismos que cruzan la frontera del diagrama 1.x.
 
-### 4.4. Diccionario de datos y especificación de procesos
+## 7. Flujogramas
 
-El DFD se acompaña de dos artefactos que completan el modelo funcional: [DEMARCO]
-
-- **Diccionario de datos (DD)**: repositorio que **define** rigurosamente cada flujo, almacén y dato elemental del DFD, usando una notación de composición:
-  - `=` (se compone de), `+` (y/concatenación), `{ }` (iteración/repetición), `[ | ]` (selección/alternativa), `( )` (opcional).
-  - P. ej.: `solicitud = nº_registro + fecha + datos_solicitante + [presencial | telemática]`.
-- **Especificación de procesos (mini-spec o P-SPEC)**: describe la **lógica** de cada proceso **primitivo** (los que ya no se descomponen), mediante **pseudocódigo**, **tablas de decisión** o **lenguaje estructurado**. Aquí es donde el modelado funcional enlaza con los **flujogramas**.
-
-> **[DATO CLAVE EXAMEN]** El **diccionario de datos** define los datos (con `= + { } [ ] ( )`); la **mini-spec** define la lógica de los procesos primitivos. Juntos, DFD + DD + mini-specs forman el **modelo de procesos** completo del análisis estructurado.
-
-### 4.5. Notaciones: Yourdon/DeMarco frente a Gane/Sarson
-
-| Componente | Yourdon / DeMarco | Gane / Sarson |
-|---|---|---|
-| Proceso | Círculo (burbuja) | Rectángulo de esquinas redondeadas |
-| Flujo de datos | Flecha curva | Flecha recta |
-| Almacén | Dos líneas paralelas abiertas | Rectángulo abierto por la derecha |
-| Entidad externa | Rectángulo | Rectángulo (a veces con sombra) |
-
-Ambas notaciones son **semánticamente equivalentes**; la elección es de estilo o de la herramienta CASE. En UML, el papel del DFD lo cubre parcialmente el **diagrama de actividad** (flujo de acciones y objetos). [UML]
-
-> **[REFERENCIA CRUZADA]** El DFD describe *qué* hace el sistema con los datos; las estructuras de esos datos en reposo (los almacenes) se diseñan con el **modelo E-R** (§2) y acaban en un **SGBD** (Tema 15). DFD (procesos) y E-R (datos) son las dos caras del análisis estructurado.
-
----
-
-## 5. Flujogramas, reglas de construcción y UML
-
-### 5.1. Concepto y propósito del flujograma
+### 7.1. Concepto y propósito del flujograma
 
 Un **flujograma** (diagrama de flujo, *flowchart*) es la representación gráfica de la **secuencia lógica de pasos** de un proceso o algoritmo, mostrando el **orden de ejecución** y las **decisiones**. A diferencia del DFD (que muestra *transformaciones* de datos sin orden temporal), el flujograma sí refleja la **secuencia y el control** del flujo. [ISO5807] Se usa para documentar algoritmos, procedimientos administrativos y la lógica de los procesos primitivos de un DFD.
 
 > **[DATO CLAVE EXAMEN]** **DFD ≠ flujograma.** El DFD modela el **flujo de datos** (qué se transforma) sin secuencia temporal; el **flujograma** modela el **flujo de control** (en qué orden, con qué decisiones). Es una distinción que el examen busca confundir.
 
-### 5.2. Símbolos normalizados (ISO 5807 / ANSI)
+### 7.2. Símbolos normalizados (ISO 5807 / ANSI)
 
 La norma **ISO 5807:1985** (heredera de ANSI X3.5) normaliza los símbolos del flujograma: [ISO5807][ANSI-X3.5]
 
@@ -344,7 +312,7 @@ La norma **ISO 5807:1985** (heredera de ANSI X3.5) normaliza los símbolos del f
 
 > **[DATO CLAVE EXAMEN]** Memoriza los tres símbolos básicos: **óvalo = inicio/fin (terminal)**, **rectángulo = proceso**, **rombo = decisión**. El **romboide/paralelogramo = entrada/salida**. El rombo es el único con **varias salidas** (las ramas de la condición).
 
-### 5.3. Estructuras básicas: secuencia, selección e iteración
+### 7.3. Estructuras básicas: secuencia, selección e iteración
 
 El **teorema de Böhm-Jacopini (1966)** demuestra que cualquier algoritmo puede expresarse combinando **solo tres estructuras de control**, sin saltos incondicionales (*goto*). Es el fundamento de la **programación estructurada**: [BOHM-JACOPINI]
 
@@ -358,7 +326,7 @@ El **teorema de Böhm-Jacopini (1966)** demuestra que cualquier algoritmo puede 
 
 > **[REFERENCIA CRUZADA]** Estas estructuras de control (condicionales, bucles, recursividad) son el núcleo del **Tema 18 (Lenguajes de programación)**. El flujograma es la representación gráfica de lo que en el Tema 18 se escribe como código.
 
-### 5.4. Reglas de construcción del flujograma
+### 7.4. Reglas de construcción del flujograma
 
 - **Un único inicio y, preferiblemente, un único fin** (terminales).
 - El flujo va, por convención, de **arriba abajo** y de **izquierda a derecha**; las flechas explicitan cualquier otro sentido.
@@ -370,7 +338,7 @@ El **teorema de Böhm-Jacopini (1966)** demuestra que cualquier algoritmo puede 
 > **[EJERCICIO RESUELTO]** *Flujograma de «validar si un habitante es mayor de edad».*
 > `Inicio` (óvalo) → `Leer fecha_nacimiento` (romboide E/S) → `Calcular edad` (rectángulo) → `¿edad ≥ 18?` (rombo): rama **Sí** → `Mostrar "Mayor de edad"`; rama **No** → `Mostrar "Menor de edad"`; ambas → `Fin` (óvalo). Es una **selección** simple con un solo punto de fin.
 
-### 5.5. Ordinograma, organigrama y pseudocódigo
+### 7.5. Ordinograma, organigrama y pseudocódigo
 
 En la tradición española conviene distinguir términos próximos: [METRICA3]
 
@@ -380,13 +348,13 @@ En la tradición española conviene distinguir términos próximos: [METRICA3]
 
 > **[DATO CLAVE EXAMEN]** **Organigrama** = visión de **conjunto/módulos** (qué partes hay). **Ordinograma** = **detalle** del algoritmo (cómo funciona por dentro). El **pseudocódigo** es la versión textual del ordinograma. Esta terna se pregunta en oposiciones españolas con frecuencia.
 
-### 5.6. UML: panorama de los tipos de diagramas
+### 7.6. UML: panorama de los tipos de diagramas
 
 El **Lenguaje Unificado de Modelado (UML)**, estandarizado por la OMG, unifica las técnicas anteriores en una notación única orientada a objetos. UML 2.5 define **14 tipos de diagramas** en dos grandes familias: [UML][FOWLER]
 
 - **Diagramas de estructura** (vista estática): **clases**, objetos, componentes, despliegue, paquetes, estructura compuesta, perfiles. El **diagrama de clases** es el equivalente moderno del **E-R**.
 - **Diagramas de comportamiento** (vista dinámica): **casos de uso**, **actividad**, **estados (máquina de estados)**, **secuencia**, comunicación, tiempos, visión global de interacción.
-  - El **diagrama de estados** equivale al **DTE** (§3).
+  - El **diagrama de estados** equivale al **DTE** (§8).
   - El **diagrama de actividad** cubre el papel del **flujograma** y, en parte, del **DFD** (incluye flujos de control y de objetos, decisiones, bifurcaciones y *swimlanes*).
   - El **diagrama de casos de uso** captura los requisitos funcionales (actores y casos de uso), sin equivalente clásico directo.
 
@@ -399,6 +367,42 @@ El **Lenguaje Unificado de Modelado (UML)**, estandarizado por la OMG, unifica l
 > **[DATO CLAVE EXAMEN]** UML 2.5 = **14 diagramas** en dos familias: **estructura** (estáticos; el de **clases** es el rey) y **comportamiento** (dinámicos; **casos de uso, actividad, estados, secuencia**). Equivalencias: **E-R ↔ clases**, **DTE ↔ estados**, **flujograma/DFD ↔ actividad**.
 
 > **[REFERENCIA CRUZADA]** UML, los **patrones de diseño** y la modelización orientada a objetos se desarrollan en el **Tema 20 (Diseño y programación orientada a objetos)**. Este tema cubre el modelado *conceptual y funcional*; el Tema 20, el modelado *orientado a objetos* y su implementación.
+
+---
+
+## 8. Modelado dinámico: el diagrama de transición de estados (DTE)
+
+> **Material complementario.** El enunciado oficial de este tema no nombra este apartado. Se mantiene porque completa el panorama de técnicas de modelado junto al modelo estático y al funcional, pero lo exigible es lo que enumera el título del tema.
+
+### 8.1. Estados, transiciones, eventos, condiciones y acciones
+
+El **modelado dinámico** describe el **comportamiento** del sistema a lo largo del tiempo: cómo reacciona ante los **eventos** y cómo va cambiando de **estado**. La técnica clásica es el **diagrama de transición de estados (DTE)**, una máquina de estados finita. [YOURDON][RUMBAUGH] Sus elementos:
+
+- **Estado**: situación estable en la que se encuentra un objeto o el sistema durante un intervalo, esperando un evento. Se dibuja como un **rectángulo redondeado**. Hay un **estado inicial** (círculo relleno) y, opcionalmente, **estados finales** (círculo con borde).
+- **Transición**: paso de un estado a otro. Se dibuja como una **flecha** etiquetada.
+- **Evento (suceso)**: estímulo que dispara una transición (la llegada de un dato, una acción del usuario, el vencimiento de un plazo).
+- **Condición (guarda)**: predicado que debe cumplirse para que la transición ocurra. Se escribe entre corchetes `[condición]`.
+- **Acción**: operación que se ejecuta al producirse la transición (o al entrar/salir de un estado).
+
+La etiqueta de una transición sigue el patrón **`evento [condición] / acción`**.
+
+> **[EJEMPLO AYTO MADRID]** El ciclo de vida de un **expediente administrativo** en la sede electrónica es un DTE natural: estados `INICIADO` → `EN_TRAMITACIÓN` → `PENDIENTE_SUBSANACIÓN` → `RESUELTO` → `NOTIFICADO` → `ARCHIVADO`. El evento «presentar alegación» con condición `[plazo abierto]` dispara la transición a `EN_TRAMITACIÓN`; la acción asociada es «registrar entrada».
+
+### 8.2. Reglas de construcción del DTE
+
+- Todo diagrama tiene **un único estado inicial** y puede tener varios finales.
+- Cada **transición** parte de un estado y llega a un estado (posiblemente el mismo: *autotransición*).
+- Una transición se etiqueta con el **evento** que la dispara; sin evento no hay cambio de estado.
+- Los estados deben ser **mutuamente excluyentes**: el sistema está en uno y solo uno en cada instante.
+- No deben existir **estados inalcanzables** (sin transición de entrada) ni **callejones sin salida** no deseados (estados sin salida que no sean finales).
+
+> **[DATO CLAVE EXAMEN]** En un DTE/máquina de estados: **un estado inicial**, **estados mutuamente excluyentes**, **transiciones disparadas por eventos**. Etiqueta de transición: `evento [guarda] / acción`. Las autotransiciones (vuelven al mismo estado) son válidas.
+
+### 8.3. Equivalencia con las máquinas de estados y UML
+
+El DTE clásico equivale a una **máquina de estados finita**. UML lo recoge y amplía en el **diagrama de estados (state machine diagram)**, que añade: estados compuestos (anidados), regiones concurrentes, acciones de entrada/salida (`entry/`, `exit/`), actividades internas (`do/`) y pseudoestados (histórico, unión, decisión). [UML][FOWLER]
+
+> **[REFERENCIA CRUZADA]** Las máquinas de estados son también la base de muchos **algoritmos** (Tema 13) y del análisis léxico de **lenguajes** (Tema 18). Un autómata finito determinista es, formalmente, un DTE sin acciones.
 
 ---
 

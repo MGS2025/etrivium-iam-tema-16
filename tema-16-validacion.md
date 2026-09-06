@@ -12,12 +12,12 @@ Checklist de revisión para **María / Ana (IAM)** y, en su caso, **Jesús Cuadr
 
 - [ ] **Modelo conceptual de datos** tratado (§1) — concepto, niveles conceptual/lógico/físico.
 - [ ] **Entidades, atributos y relaciones** (§2.2-§2.4) — tipos de cada uno y su iconografía.
-- [ ] **Reglas de modelización** (§2.5) — proceso y errores típicos del E-R.
+- [ ] **Reglas de modelización** (§3.1) — proceso y errores típicos del E-R.
 - [ ] **Diagramas de flujo de datos** (§4) — cuatro componentes y reglas.
-- [ ] **Reglas de construcción** del DFD (§4.2) y del flujograma (§5.4).
-- [ ] **Descomposición en niveles** (§4.3) — contexto, nivel 1, explosión y equilibrado.
-- [ ] **Flujogramas** (§5) — símbolos ISO 5807 y estructuras de control.
-- [ ] Epígrafes del índice del cliente cubiertos: arquitectura ANSI (§1.2), modelado estático/dinámico/funcional (§1.5, §2, §3, §4), DTE (§3), DFD (§4), UML y tipos de diagramas (§5.6).
+- [ ] **Reglas de construcción** del DFD (§5) y del flujograma (§7.4).
+- [ ] **Descomposición en niveles** (§6) — contexto, nivel 1, explosión y equilibrado.
+- [ ] **Flujogramas** (§7) — símbolos ISO 5807 y estructuras de control.
+- [ ] Epígrafes del índice del cliente cubiertos: arquitectura ANSI (§1.2), modelado estático/dinámico/funcional (§1.5, §2, §8, §4), DTE (§8), DFD (§4), UML y tipos de diagramas (§7.6).
 
 ## 2. Rigor técnico
 
@@ -31,11 +31,11 @@ Checklist de revisión para **María / Ana (IAM)** y, en su caso, **Jesús Cuadr
 
 ## 3. Referencias cruzadas (vs BOAM 10.032)
 
-- [ ] **T13** (Estructuras de datos) — citado en §3.3 (máquinas de estados).
-- [ ] **T15** (SGBD) — citado en §1.1, §4.5.
-- [ ] **T17** (Diseño lógico, modelo relacional, normalización) — citado en §1.1, §2.8.
-- [ ] **T18** (Lenguajes de programación) — citado en §5.3 (estructuras de control).
-- [ ] **T20** (POO, UML, patrones) — citado en §2.6 (herencia), §5.6 (UML).
+- [ ] **T13** (Estructuras de datos) — citado en §8.3 (máquinas de estados).
+- [ ] **T15** (SGBD) — citado en §1.1, §4.3.
+- [ ] **T17** (Diseño lógico, modelo relacional, normalización) — citado en §1.1, §3.4.
+- [ ] **T18** (Lenguajes de programación) — citado en §7.3 (estructuras de control).
+- [ ] **T20** (POO, UML, patrones) — citado en §3.2 (herencia), §7.6 (UML).
 - [ ] Ninguna referencia cruzada inventa un enunciado de otro tema (revisión anti-alucinación).
 
 ## 4. Aspectos pedagógicos y de formato

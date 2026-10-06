@@ -14,13 +14,13 @@
 
 Este tema incluye cuatro tipos de **cajas callout** para facilitar el estudio:
 
-> **[DATO CLAVE EXAMEN]** Información de alta densidad memorística, con alta probabilidad de aparecer en el test oficial.
+> **[DATO CLAVE]** Información de alta densidad memorística.
 
 > **[EJERCICIO RESUELTO]** Problema + solución paso a paso (modelado de un E-R, niveles de un DFD, traza de un flujograma).
 
-> **[EJEMPLO AYTO MADRID]** Aplicación real de la teoría al entorno municipal (Padrón, callejero, tributos, sede electrónica).
+> **[EJEMPLO DE APLICACIÓN EN EL AYTO]** Aplicación real de la teoría al entorno municipal (Padrón, callejero, tributos, sede electrónica).
 
-> **[REFERENCIA CRUZADA]** Enlace conceptual a otros temas del temario oficial.
+> **[RELACIÓN CON OTROS TEMAS]** Enlace conceptual a otros temas del temario oficial.
 
 Las fuentes se referencian con etiquetas breves tipo `[CHEN]` o `[ELMASRI, cap. 3]` — el registro completo está en `tema-16-fuentes.md`. Este tema combina **notación clásica** (la tradicional en oposiciones, alineada con MÉTRICA v3) y **UML** (estándar moderno), señalando la equivalencia entre ambas en cada técnica.
 
@@ -40,9 +40,9 @@ Un **modelo de datos** es un conjunto de **conceptos, reglas y notación** que p
 - **Modelos lógicos (de implementación o representativos)**: próximos a cómo organiza los datos el SGBD. El **modelo relacional** es el dominante (ver Tema 17).
 - **Modelos físicos (de bajo nivel)**: describen *cómo* se almacenan los datos en el soporte (ficheros, índices, bloques).
 
-> **[DATO CLAVE EXAMEN]** **Modelo conceptual** = independiente del SGBD, cercano al usuario (E-R). **Modelo lógico** = dependiente del tipo de SGBD, cercano al diseñador (relacional). **Modelo físico** = dependiente del producto y del soporte (almacenamiento). No confundir los tres niveles: es la pregunta clásica del bloque de bases de datos.
+> **[DATO CLAVE]** **Modelo conceptual** = independiente del SGBD, cercano al usuario (E-R). **Modelo lógico** = dependiente del tipo de SGBD, cercano al diseñador (relacional). **Modelo físico** = dependiente del producto y del soporte (almacenamiento). No confundir los tres niveles.
 
-> **[REFERENCIA CRUZADA]** El **modelo conceptual de datos** (este tema) precede al **diseño lógico y físico y la normalización** (Tema 17), y se materializa en algún tipo de **SGBD** (Tema 15). El modelo de datos es el puente entre el análisis de requisitos y la base de datos operativa.
+> **[RELACIÓN CON OTROS TEMAS]** El **modelo conceptual de datos** (este tema) precede al **diseño lógico y físico y la normalización** (Tema 17), y se materializa en algún tipo de **SGBD** (Tema 15). El modelo de datos es el puente entre el análisis de requisitos y la base de datos operativa.
 
 ### 1.2. Niveles de abstracción: la arquitectura ANSI/SPARC
 
@@ -52,7 +52,7 @@ En 1975, el comité **ANSI/X3/SPARC** propuso una arquitectura de **tres esquema
 2. **Nivel conceptual (o lógico global)**: describe **toda** la estructura de la base de datos para la comunidad de usuarios: entidades, atributos, relaciones y restricciones. Es **único** y no contiene detalles de almacenamiento. Aquí vive el **modelo conceptual de datos**.
 3. **Nivel interno (o físico)**: describe **cómo** se almacenan físicamente los datos: estructuras de ficheros, índices, rutas de acceso, ubicación en el soporte. Es **único**.
 
-> **[DATO CLAVE EXAMEN]** ANSI/SPARC: **externo (vistas, varios)** → **conceptual (global, único)** → **interno (físico, único)**. La correspondencia entre esquemas se llama *mapping*. Es muy típico preguntar cuántos esquemas hay de cada tipo: **varios externos, un conceptual, un interno**.
+> **[DATO CLAVE]** ANSI/SPARC: **externo (vistas, varios)** → **conceptual (global, único)** → **interno (físico, único)**. La correspondencia entre esquemas se llama *mapping*. Hay que retener cuántos esquemas hay de cada tipo: **varios externos, un conceptual, un interno**.
 
 ### 1.3. Independencia de datos
 
@@ -61,7 +61,7 @@ La arquitectura de tres esquemas hace posible la **independencia de datos**: la 
 - **Independencia física**: se puede cambiar el **esquema interno** (reorganizar ficheros, añadir un índice, cambiar de disco) sin modificar el esquema conceptual ni las aplicaciones. Es la más fácil de lograr.
 - **Independencia lógica**: se puede cambiar el **esquema conceptual** (añadir una entidad o un atributo) sin modificar los esquemas externos ni reescribir las aplicaciones que no usan ese cambio. Es más difícil, porque las vistas dependen del esquema conceptual.
 
-> **[DATO CLAVE EXAMEN]** **Física** = aísla el conceptual de cambios en el almacenamiento. **Lógica** = aísla las vistas/aplicaciones de cambios en el esquema conceptual. La independencia lógica es la **más difícil** de conseguir.
+> **[DATO CLAVE]** **Física** = aísla el conceptual de cambios en el almacenamiento. **Lógica** = aísla las vistas/aplicaciones de cambios en el esquema conceptual. La independencia lógica es la **más difícil** de conseguir.
 
 ### 1.4. El modelo de dominio y el modelo conceptual de datos
 
@@ -74,7 +74,7 @@ Sus características fundamentales son:
 - **Validable por el usuario**: un experto del dominio (no informático) debe poder entenderlo y confirmarlo.
 - **Estable**: cambia solo si cambia el negocio, no si cambia la tecnología.
 
-> **[EJEMPLO AYTO MADRID]** El modelo de dominio del **Padrón Municipal de Habitantes** identifica conceptos como *Habitante*, *Vivienda*, *Vía* (calle del callejero), *Distrito* y *Barrio*, y relaciones como «un habitante *está empadronado en* una vivienda» o «una vía *pertenece a* un distrito». Esto se decide con los técnicos de Estadística del Ayuntamiento, **sin** hablar todavía de tablas ni de Oracle: es modelado conceptual puro.
+> **[EJEMPLO DE APLICACIÓN EN EL AYTO]** El modelo de dominio del **Padrón Municipal de Habitantes** identifica conceptos como *Habitante*, *Vivienda*, *Vía* (calle del callejero), *Distrito* y *Barrio*, y relaciones como «un habitante *está empadronado en* una vivienda» o «una vía *pertenece a* un distrito». Esto se decide con los técnicos de Estadística del Ayuntamiento, **sin** hablar todavía de tablas ni de Oracle: es modelado conceptual puro.
 
 ### 1.5. Técnicas y tipos de modelado: estático, dinámico y funcional
 
@@ -86,7 +86,7 @@ Un sistema de información se describe desde **tres perspectivas complementarias
 | **Dinámica (comportamiento)** | ¿Cómo cambia de estado el sistema ante los eventos? | Diagrama de Transición de Estados (DTE) | Diagrama de estados |
 | **Funcional (procesos)** | ¿Qué transformaciones sufren los datos al fluir? | Diagrama de Flujo de Datos (DFD) | Diagrama de actividad |
 
-> **[DATO CLAVE EXAMEN]** Memoriza la terna: **estático → E-R**, **dinámico → DTE**, **funcional → DFD**. El enunciado oficial del tema recorre exactamente estas tres vistas más los **flujogramas** (que detallan la lógica de un proceso).
+> **[DATO CLAVE]** Memoriza la terna: **estático → E-R**, **dinámico → DTE**, **funcional → DFD**. El enunciado oficial del tema recorre exactamente estas tres vistas más los **flujogramas** (que detallan la lógica de un proceso).
 
 ---
 
@@ -108,7 +108,7 @@ Según su dependencia de existencia, las entidades se clasifican en:
 - **Entidad fuerte (regular)**: tiene existencia propia y un identificador (clave) formado por sus propios atributos. P. ej. `HABITANTE`.
 - **Entidad débil**: su existencia depende de otra entidad (la *propietaria* o *fuerte*) y **no** puede identificarse solo con sus atributos; necesita la clave de la entidad fuerte más un **discriminante** (clave parcial). En el diagrama es un **rectángulo doble**. P. ej. `VOLUMEN_EXPEDIENTE` depende de `EXPEDIENTE`.
 
-> **[DATO CLAVE EXAMEN]** **Entidad fuerte**: se identifica sola (rectángulo simple). **Entidad débil**: depende de otra y se identifica con la clave ajena + un discriminante propio (rectángulo doble; la relación que la liga es una *relación identificadora*, en rombo doble).
+> **[DATO CLAVE]** **Entidad fuerte**: se identifica sola (rectángulo simple). **Entidad débil**: depende de otra y se identifica con la clave ajena + un discriminante propio (rectángulo doble; la relación que la liga es una *relación identificadora*, en rombo doble).
 
 ### 2.3. Atributos
 
@@ -119,9 +119,9 @@ Un **atributo** es una propiedad o característica de una entidad (o de una rela
 - **Almacenado** vs **derivado (calculado)**: el derivado se obtiene de otros. P. ej. `edad` se deriva de `fecha_nacimiento`. Se dibuja con **elipse de línea discontinua**.
 - **Identificador (clave)**: atributo o conjunto de atributos cuyo valor identifica unívocamente cada ocurrencia. Se **subraya**. Puede haber varias claves candidatas; se elige una **clave primaria**.
 
-> **[DATO CLAVE EXAMEN]** Representación en Chen: atributo = elipse; **clave = subrayado**; **multivaluado = elipse doble**; **derivado = elipse discontinua**; **compuesto = elipse con elipses hijas**. Esta «iconografía» se pregunta literalmente.
+> **[DATO CLAVE]** Representación en Chen: atributo = elipse; **clave = subrayado**; **multivaluado = elipse doble**; **derivado = elipse discontinua**; **compuesto = elipse con elipses hijas**.
 
-> **[EJEMPLO AYTO MADRID]** En `HABITANTE`, el atributo identificador es el **DNI/NIE** (subrayado); `nombre_completo` es **compuesto** (nombre + apellidos); `teléfono_contacto` puede ser **multivaluado**; y `edad` es **derivada** de la fecha de nacimiento (no se almacena, se calcula).
+> **[EJEMPLO DE APLICACIÓN EN EL AYTO]** En `HABITANTE`, el atributo identificador es el **DNI/NIE** (subrayado); `nombre_completo` es **compuesto** (nombre + apellidos); `teléfono_contacto` puede ser **multivaluado**; y `edad` es **derivada** de la fecha de nacimiento (no se almacena, se calcula).
 
 ### 2.4. Relaciones: grado, cardinalidad y participación
 
@@ -146,7 +146,7 @@ Una **relación (interrelación)** es una asociación con significado entre dos 
 
 La notación **(mín, máx)** combina ambas: junto a cada entidad se anota el par cardinalidad mínima y máxima de sus ocurrencias en la relación. P. ej. `(1,1)` o `(0,N)`.
 
-> **[DATO CLAVE EXAMEN]** No confundir **cardinalidad máxima** (1:1, 1:N, N:M → *cuántas* como tope) con **participación o cardinalidad mínima** (total/parcial → *si es obligatoria*). La notación (mín, máx) reúne las dos. Cuidado: la posición de la etiqueta (mín,máx) varía entre escuelas (Chen la pone *cruzada*, MÉTRICA la pone *del lado de la entidad*); en el examen suele especificarse.
+> **[DATO CLAVE]** No confundir **cardinalidad máxima** (1:1, 1:N, N:M → *cuántas* como tope) con **participación o cardinalidad mínima** (total/parcial → *si es obligatoria*). La notación (mín, máx) reúne las dos. Cuidado: la posición de la etiqueta (mín,máx) varía entre escuelas (Chen la pone *cruzada*, MÉTRICA la pone *del lado de la entidad*).
 
 > **[EJERCICIO RESUELTO]** *Modela: «Un distrito tiene muchos barrios; cada barrio pertenece a un único distrito; todo barrio pertenece obligatoriamente a un distrito y todo distrito tiene al menos un barrio».*
 > Entidades: `DISTRITO`, `BARRIO`. Relación: `CONTIENE` (rombo). Cardinalidad: **1:N** (un distrito, muchos barrios). Participación: **total en ambos lados** (todo barrio tiene distrito → total en BARRIO; todo distrito tiene ≥1 barrio → total en DISTRITO). En notación (mín,máx): DISTRITO `(1,N)`, BARRIO `(1,1)`.
@@ -182,9 +182,9 @@ El **modelo E-R extendido (EER)** añade construcciones semánticas para casos c
 - **Agregación**: trata una **relación** como si fuera una entidad de nivel superior para poder relacionarla con otra entidad (relación de relaciones). P. ej. la relación `TRABAJA_EN(EMPLEADO, PROYECTO)` se agrega para relacionarla con `MAQUINARIA`.
 - **Asociación**: vínculo «parte-de» (composición/agregación en sentido UML) entre un todo y sus partes.
 
-> **[DATO CLAVE EXAMEN]** **Generalización/especialización** = jerarquía *es-un* (herencia de atributos del supertipo). Atención a las dos parejas de restricciones: **disjunta/solapada** y **total/parcial**. La **agregación** del EER es «tratar una relación como entidad»; no confundir con la agregación de UML.
+> **[DATO CLAVE]** **Generalización/especialización** = jerarquía *es-un* (herencia de atributos del supertipo). Atención a las dos parejas de restricciones: **disjunta/solapada** y **total/parcial**. La **agregación** del EER es «tratar una relación como entidad»; no confundir con la agregación de UML.
 
-> **[REFERENCIA CRUZADA]** La jerarquía de generalización/especialización del EER es el antecedente directo de la **herencia** en la **Programación Orientada a Objetos** (Tema 20). Un supertipo E-R ↔ una superclase; un subtipo ↔ una subclase que hereda y extiende.
+> **[RELACIÓN CON OTROS TEMAS]** La jerarquía de generalización/especialización del EER es el antecedente directo de la **herencia** en la **Programación Orientada a Objetos** (Tema 20). Un supertipo E-R ↔ una superclase; un subtipo ↔ una subclase que hereda y extiende.
 
 ### 3.3. Notaciones: Chen, pata de gallo y UML
 
@@ -202,7 +202,7 @@ La misma semántica E-R se dibuja con notaciones distintas; conviene reconocerla
 | Cardinalidad N:M | `N`…`M` sobre líneas | doble pata de gallo | `*`…`*` |
 | Generalización | Triángulo/«ISA» | — | Triángulo de herencia |
 
-> **[DATO CLAVE EXAMEN]** En **pata de gallo**, los símbolos se leen *junto a la entidad del extremo*: «||» = uno y solo uno; «o<» = cero o muchos; «|<» = uno o muchos. Es la notación que generan casi todas las herramientas (ERwin, MySQL Workbench…). UML usa **multiplicidad** numérica (`0..1`, `1..*`).
+> **[DATO CLAVE]** En **pata de gallo**, los símbolos se leen *junto a la entidad del extremo*: «||» = uno y solo uno; «o<» = cero o muchos; «|<» = uno o muchos. Es la notación que generan casi todas las herramientas (ERwin, MySQL Workbench…). UML usa **multiplicidad** numérica (`0..1`, `1..*`).
 
 ### 3.4. Del modelo E-R al modelo relacional
 
@@ -215,7 +215,7 @@ El modelo conceptual E-R se **transforma** en un modelo lógico relacional sigui
 - Atributo **multivaluado** → tabla aparte con la clave de la entidad + el valor.
 - **Entidad débil** → tabla con la clave de la entidad fuerte + su discriminante como clave primaria compuesta.
 
-> **[REFERENCIA CRUZADA]** Esta transformación es la entrada del **Tema 17 (Diseño lógico y físico, modelo relacional y normalización)**. El resultado se refina con las **formas normales** para eliminar redundancias y anomalías. El SQL que crea esas tablas es el **Tema 19**.
+> **[RELACIÓN CON OTROS TEMAS]** Esta transformación es la entrada del **Tema 17 (Diseño lógico y físico, modelo relacional y normalización)**. El resultado se refina con las **formas normales** para eliminar redundancias y anomalías. El SQL que crea esas tablas es el **Tema 19**.
 
 ---
 
@@ -230,7 +230,7 @@ El **diagrama de flujo de datos (DFD)** modela el sistema como una **red de proc
 3. **Almacén de datos (data store)**: dato en reposo (un fichero, una tabla, un archivo). Se dibuja como **dos líneas paralelas** (Yourdon) o un rectángulo abierto (Gane/Sarson). Se numera con D1, D2…
 4. **Entidad externa (origen/destino, terminador)**: persona, organización u otro sistema, **externo** al ámbito modelado, que produce o consume datos. Se dibuja como un **rectángulo**.
 
-> **[DATO CLAVE EXAMEN]** Los **cuatro** componentes del DFD: **proceso** (transforma), **flujo** (dato en movimiento), **almacén** (dato en reposo) y **entidad externa** (frontera del sistema). Es la pregunta más repetida del epígrafe. El DFD modela *función*, **no** secuencia temporal ni decisiones (eso es el flujograma).
+> **[DATO CLAVE]** Los **cuatro** componentes del DFD: **proceso** (transforma), **flujo** (dato en movimiento), **almacén** (dato en reposo) y **entidad externa** (frontera del sistema). El DFD modela *función*, **no** secuencia temporal ni decisiones (eso es el flujograma).
 
 ### 4.2. Diccionario de datos y especificación de procesos
 
@@ -241,7 +241,7 @@ El DFD se acompaña de dos artefactos que completan el modelo funcional: [DEMARC
   - P. ej.: `solicitud = nº_registro + fecha + datos_solicitante + [presencial | telemática]`.
 - **Especificación de procesos (mini-spec o P-SPEC)**: describe la **lógica** de cada proceso **primitivo** (los que ya no se descomponen), mediante **pseudocódigo**, **tablas de decisión** o **lenguaje estructurado**. Aquí es donde el modelado funcional enlaza con los **flujogramas**.
 
-> **[DATO CLAVE EXAMEN]** El **diccionario de datos** define los datos (con `= + { } [ ] ( )`); la **mini-spec** define la lógica de los procesos primitivos. Juntos, DFD + DD + mini-specs forman el **modelo de procesos** completo del análisis estructurado.
+> **[DATO CLAVE]** El **diccionario de datos** define los datos (con `= + { } [ ] ( )`); la **mini-spec** define la lógica de los procesos primitivos. Juntos, DFD + DD + mini-specs forman el **modelo de procesos** completo del análisis estructurado.
 
 ### 4.3. Notaciones: Yourdon/DeMarco frente a Gane/Sarson
 
@@ -254,7 +254,7 @@ El DFD se acompaña de dos artefactos que completan el modelo funcional: [DEMARC
 
 Ambas notaciones son **semánticamente equivalentes**; la elección es de estilo o de la herramienta CASE. En UML, el papel del DFD lo cubre parcialmente el **diagrama de actividad** (flujo de acciones y objetos). [UML]
 
-> **[REFERENCIA CRUZADA]** El DFD describe *qué* hace el sistema con los datos; las estructuras de esos datos en reposo (los almacenes) se diseñan con el **modelo E-R** (§2) y acaban en un **SGBD** (Tema 15). DFD (procesos) y E-R (datos) son las dos caras del análisis estructurado.
+> **[RELACIÓN CON OTROS TEMAS]** El DFD describe *qué* hace el sistema con los datos; las estructuras de esos datos en reposo (los almacenes) se diseñan con el **modelo E-R** (§2) y acaban en un **SGBD** (Tema 15). DFD (procesos) y E-R (datos) son las dos caras del análisis estructurado.
 
 ---
 
@@ -268,7 +268,7 @@ El análisis estructurado fija reglas estrictas de buena formación: [DEMARCO][G
 - **Nombres significativos**: procesos con verbo; flujos y almacenes con sustantivo.
 - **Numeración jerárquica** de los procesos para soportar la descomposición.
 
-> **[DATO CLAVE EXAMEN]** Reglas «negativas» del DFD que más se preguntan: **no** hay flujo directo almacén↔almacén, entidad↔entidad, ni entidad↔almacén; **siempre** media un proceso. Y todo proceso debe tener **al menos una entrada y una salida** (ni «agujero negro» ni «milagro»).
+> **[DATO CLAVE]** Reglas «negativas» del DFD: **no** hay flujo directo almacén↔almacén, entidad↔entidad, ni entidad↔almacén; **siempre** media un proceso. Y todo proceso debe tener **al menos una entrada y una salida** (ni «agujero negro» ni «milagro»).
 
 ## 6. Descomposición en niveles
 
@@ -280,7 +280,7 @@ Un sistema real no cabe en un solo diagrama. El DFD se construye **por niveles**
 
 La regla que garantiza la coherencia entre niveles es el **equilibrado (balanceo)**: los flujos de entrada y salida de un proceso deben **coincidir** con los flujos que cruzan la frontera de su diagrama hijo (explosión). Si un proceso recibe `A` y produce `B`, su diagrama de descomposición debe tener exactamente `A` entrando y `B` saliendo.
 
-> **[DATO CLAVE EXAMEN]** **Diagrama de contexto = nivel 0 = una sola burbuja + entidades externas, sin almacenes.** La descomposición numera `1` → `1.1`, `1.2`… El **equilibrado/balanceo** exige que los flujos del proceso padre = flujos frontera del diagrama hijo. Un proceso que ya no se descompone es una **primitiva funcional**.
+> **[DATO CLAVE]** **Diagrama de contexto = nivel 0 = una sola burbuja + entidades externas, sin almacenes.** La descomposición numera `1` → `1.1`, `1.2`… El **equilibrado/balanceo** exige que los flujos del proceso padre = flujos frontera del diagrama hijo. Un proceso que ya no se descompone es una **primitiva funcional**.
 
 > **[EJERCICIO RESUELTO]** *Sitúa por niveles el sistema de «Gestión de tributos municipales».*
 > **Nivel 0 (contexto)**: burbuja «0 · Gestión de tributos» con entidades externas `CONTRIBUYENTE`, `ENTIDAD_BANCARIA` y `PADRÓN` (otro sistema). Flujos: «declaración», «recibo», «cobro».
@@ -293,7 +293,7 @@ La regla que garantiza la coherencia entre niveles es el **equilibrado (balanceo
 
 Un **flujograma** (diagrama de flujo, *flowchart*) es la representación gráfica de la **secuencia lógica de pasos** de un proceso o algoritmo, mostrando el **orden de ejecución** y las **decisiones**. A diferencia del DFD (que muestra *transformaciones* de datos sin orden temporal), el flujograma sí refleja la **secuencia y el control** del flujo. [ISO5807] Se usa para documentar algoritmos, procedimientos administrativos y la lógica de los procesos primitivos de un DFD.
 
-> **[DATO CLAVE EXAMEN]** **DFD ≠ flujograma.** El DFD modela el **flujo de datos** (qué se transforma) sin secuencia temporal; el **flujograma** modela el **flujo de control** (en qué orden, con qué decisiones). Es una distinción que el examen busca confundir.
+> **[DATO CLAVE]** **DFD ≠ flujograma.** El DFD modela el **flujo de datos** (qué se transforma) sin secuencia temporal; el **flujograma** modela el **flujo de control** (en qué orden, con qué decisiones).
 
 ### 7.2. Símbolos normalizados (ISO 5807 / ANSI)
 
@@ -310,7 +310,7 @@ La norma **ISO 5807:1985** (heredera de ANSI X3.5) normaliza los símbolos del f
 | **Conector de página** | Pentágono | Une partes en distinta página |
 | **Línea de flujo** | Flecha | Sentido del flujo (por defecto, arriba→abajo, izq→der) |
 
-> **[DATO CLAVE EXAMEN]** Memoriza los tres símbolos básicos: **óvalo = inicio/fin (terminal)**, **rectángulo = proceso**, **rombo = decisión**. El **romboide/paralelogramo = entrada/salida**. El rombo es el único con **varias salidas** (las ramas de la condición).
+> **[DATO CLAVE]** Memoriza los tres símbolos básicos: **óvalo = inicio/fin (terminal)**, **rectángulo = proceso**, **rombo = decisión**. El **romboide/paralelogramo = entrada/salida**. El rombo es el único con **varias salidas** (las ramas de la condición).
 
 ### 7.3. Estructuras básicas: secuencia, selección e iteración
 
@@ -322,9 +322,9 @@ El **teorema de Böhm-Jacopini (1966)** demuestra que cualquier algoritmo puede 
    - **Mientras** (`while`): la condición se evalúa **antes** (puede no ejecutarse ninguna vez).
    - **Repetir-hasta** (`do-until`): la condición se evalúa **después** (se ejecuta al menos una vez).
 
-> **[DATO CLAVE EXAMEN]** Las **tres** estructuras de la programación estructurada (Böhm-Jacopini): **secuencia, selección e iteración**. La diferencia clave de los bucles: **mientras** comprueba *antes* (0 o más veces); **repetir-hasta** comprueba *después* (1 o más veces). Programación estructurada = **sin `goto`**.
+> **[DATO CLAVE]** Las **tres** estructuras de la programación estructurada (Böhm-Jacopini): **secuencia, selección e iteración**. La diferencia clave de los bucles: **mientras** comprueba *antes* (0 o más veces); **repetir-hasta** comprueba *después* (1 o más veces). Programación estructurada = **sin `goto`**.
 
-> **[REFERENCIA CRUZADA]** Estas estructuras de control (condicionales, bucles, recursividad) son el núcleo del **Tema 18 (Lenguajes de programación)**. El flujograma es la representación gráfica de lo que en el Tema 18 se escribe como código.
+> **[RELACIÓN CON OTROS TEMAS]** Estas estructuras de control (condicionales, bucles, recursividad) son el núcleo del **Tema 18 (Lenguajes de programación)**. El flujograma es la representación gráfica de lo que en el Tema 18 se escribe como código.
 
 ### 7.4. Reglas de construcción del flujograma
 
@@ -346,7 +346,7 @@ En la tradición española conviene distinguir términos próximos: [METRICA3]
 - **Ordinograma (flujograma de detalle)**: el diagrama de flujo **detallado** de la lógica de un programa, con las estructuras de control. Es el flujograma «de programación» propiamente dicho.
 - **Pseudocódigo**: descripción textual del algoritmo en lenguaje estructurado (cercano al lenguaje natural pero con `si/mientras/para`), equivalente al ordinograma pero sin dibujo. Es la alternativa de la **mini-spec** del DFD.
 
-> **[DATO CLAVE EXAMEN]** **Organigrama** = visión de **conjunto/módulos** (qué partes hay). **Ordinograma** = **detalle** del algoritmo (cómo funciona por dentro). El **pseudocódigo** es la versión textual del ordinograma. Esta terna se pregunta en oposiciones españolas con frecuencia.
+> **[DATO CLAVE]** **Organigrama** = visión de **conjunto/módulos** (qué partes hay). **Ordinograma** = **detalle** del algoritmo (cómo funciona por dentro). El **pseudocódigo** es la versión textual del ordinograma.
 
 ### 7.6. UML: panorama de los tipos de diagramas
 
@@ -364,9 +364,9 @@ El **Lenguaje Unificado de Modelado (UML)**, estandarizado por la OMG, unifica l
 | DTE | Dinámica / comportamiento | Diagrama de estados |
 | DFD / flujograma | Funcional / control | Diagrama de actividad |
 
-> **[DATO CLAVE EXAMEN]** UML 2.5 = **14 diagramas** en dos familias: **estructura** (estáticos; el de **clases** es el rey) y **comportamiento** (dinámicos; **casos de uso, actividad, estados, secuencia**). Equivalencias: **E-R ↔ clases**, **DTE ↔ estados**, **flujograma/DFD ↔ actividad**.
+> **[DATO CLAVE]** UML 2.5 = **14 diagramas** en dos familias: **estructura** (estáticos; el de **clases** es el rey) y **comportamiento** (dinámicos; **casos de uso, actividad, estados, secuencia**). Equivalencias: **E-R ↔ clases**, **DTE ↔ estados**, **flujograma/DFD ↔ actividad**.
 
-> **[REFERENCIA CRUZADA]** UML, los **patrones de diseño** y la modelización orientada a objetos se desarrollan en el **Tema 20 (Diseño y programación orientada a objetos)**. Este tema cubre el modelado *conceptual y funcional*; el Tema 20, el modelado *orientado a objetos* y su implementación.
+> **[RELACIÓN CON OTROS TEMAS]** UML, los **patrones de diseño** y la modelización orientada a objetos se desarrollan en el **Tema 20 (Diseño y programación orientada a objetos)**. Este tema cubre el modelado *conceptual y funcional*; el Tema 20, el modelado *orientado a objetos* y su implementación.
 
 ---
 
@@ -386,7 +386,7 @@ El **modelado dinámico** describe el **comportamiento** del sistema a lo largo 
 
 La etiqueta de una transición sigue el patrón **`evento [condición] / acción`**.
 
-> **[EJEMPLO AYTO MADRID]** El ciclo de vida de un **expediente administrativo** en la sede electrónica es un DTE natural: estados `INICIADO` → `EN_TRAMITACIÓN` → `PENDIENTE_SUBSANACIÓN` → `RESUELTO` → `NOTIFICADO` → `ARCHIVADO`. El evento «presentar alegación» con condición `[plazo abierto]` dispara la transición a `EN_TRAMITACIÓN`; la acción asociada es «registrar entrada».
+> **[EJEMPLO DE APLICACIÓN EN EL AYTO]** El ciclo de vida de un **expediente administrativo** en la sede electrónica es un DTE natural: estados `INICIADO` → `EN_TRAMITACIÓN` → `PENDIENTE_SUBSANACIÓN` → `RESUELTO` → `NOTIFICADO` → `ARCHIVADO`. El evento «presentar alegación» con condición `[plazo abierto]` dispara la transición a `EN_TRAMITACIÓN`; la acción asociada es «registrar entrada».
 
 ### 8.2. Reglas de construcción del DTE
 
@@ -396,13 +396,13 @@ La etiqueta de una transición sigue el patrón **`evento [condición] / acción
 - Los estados deben ser **mutuamente excluyentes**: el sistema está en uno y solo uno en cada instante.
 - No deben existir **estados inalcanzables** (sin transición de entrada) ni **callejones sin salida** no deseados (estados sin salida que no sean finales).
 
-> **[DATO CLAVE EXAMEN]** En un DTE/máquina de estados: **un estado inicial**, **estados mutuamente excluyentes**, **transiciones disparadas por eventos**. Etiqueta de transición: `evento [guarda] / acción`. Las autotransiciones (vuelven al mismo estado) son válidas.
+> **[DATO CLAVE]** En un DTE/máquina de estados: **un estado inicial**, **estados mutuamente excluyentes**, **transiciones disparadas por eventos**. Etiqueta de transición: `evento [guarda] / acción`. Las autotransiciones (vuelven al mismo estado) son válidas.
 
 ### 8.3. Equivalencia con las máquinas de estados y UML
 
 El DTE clásico equivale a una **máquina de estados finita**. UML lo recoge y amplía en el **diagrama de estados (state machine diagram)**, que añade: estados compuestos (anidados), regiones concurrentes, acciones de entrada/salida (`entry/`, `exit/`), actividades internas (`do/`) y pseudoestados (histórico, unión, decisión). [UML][FOWLER]
 
-> **[REFERENCIA CRUZADA]** Las máquinas de estados son también la base de muchos **algoritmos** (Tema 13) y del análisis léxico de **lenguajes** (Tema 18). Un autómata finito determinista es, formalmente, un DTE sin acciones.
+> **[RELACIÓN CON OTROS TEMAS]** Las máquinas de estados son también la base de muchos **algoritmos** (Tema 13) y del análisis léxico de **lenguajes** (Tema 18). Un autómata finito determinista es, formalmente, un DTE sin acciones.
 
 ---
 

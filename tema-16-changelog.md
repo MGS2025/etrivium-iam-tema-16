@@ -4,6 +4,19 @@
 
 ---
 
+## v1.3 — 2026-10-01 — Normas vigentes y correcciones comunes de la revisión
+
+**Motivo**: revisión de la serie del 01-10-2026 (decisiones de Joan y María): normas caducadas con el patrón de dos filas en Fuentes y correcciones comunes (referencias al cliente y al origen del material, promesas sobre el examen, AP → AAPP).
+
+### Cambios
+
+- Leyenda de las cajas: se quita «con alta probabilidad de aparecer en el test oficial».
+- Fuera las promesas sobre el examen en siete cajas y párrafos («pregunta clásica», «se pregunta literalmente», «en el examen suele especificarse», «que más se preguntan», «que el examen busca confundir», «se pregunta en oposiciones con frecuencia», «muy típico preguntar», «la pregunta más repetida»).
+- Validación: «índice del cliente» → «índice»; «Decisiones a confirmar por el cliente» → «Decisiones a confirmar».
+- Títulos de las cajas homogeneizados con los temas 1-10 (revisión jurídica): «Dato clave», «Ejemplo de aplicación en el Ayto» y «Relación con otros temas»; las cajas «Ejercicio resuelto» no cambian.
+
+---
+
 ## v1.2 — 2026-09-06 — Ajuste a la literalidad del título
 
 **Estado**: pendiente de validación por el IAM.

@@ -17,7 +17,7 @@ Checklist de revisión para **María / Ana (IAM)** y, en su caso, **Jesús Cuadr
 - [ ] **Reglas de construcción** del DFD (§5) y del flujograma (§7.4).
 - [ ] **Descomposición en niveles** (§6) — contexto, nivel 1, explosión y equilibrado.
 - [ ] **Flujogramas** (§7) — símbolos ISO 5807 y estructuras de control.
-- [ ] Epígrafes del índice del cliente cubiertos: arquitectura ANSI (§1.2), modelado estático/dinámico/funcional (§1.5, §2, §8, §4), DTE (§8), DFD (§4), UML y tipos de diagramas (§7.6).
+- [ ] Epígrafes del índice cubiertos: arquitectura ANSI (§1.2), modelado estático/dinámico/funcional (§1.5, §2, §8, §4), DTE (§8), DFD (§4), UML y tipos de diagramas (§7.6).
 
 ## 2. Rigor técnico
 
@@ -40,14 +40,14 @@ Checklist de revisión para **María / Ana (IAM)** y, en su caso, **Jesús Cuadr
 
 ## 4. Aspectos pedagógicos y de formato
 
-- [ ] Callouts (DATO CLAVE, EJERCICIO RESUELTO, EJEMPLO AYTO MADRID, REFERENCIA CRUZADA) bien empleados.
+- [ ] Callouts (DATO CLAVE, EJERCICIO RESUELTO, EJEMPLO DE APLICACIÓN EN EL AYTO, RELACIÓN CON OTROS TEMAS) bien empleados.
 - [ ] Ejemplos del Ayuntamiento de Madrid realistas (Padrón, tributos, sede electrónica).
 - [ ] 12 diagramas SVG legibles, con paleta corporativa y atribución de fuente.
 - [ ] 60 preguntas de test con respuesta única y explicación; distribución A/B/C equilibrada.
 - [ ] 3 casos prácticos con cuestiones puntuadas (suman 10) y criterios de evaluación.
 - [ ] Pestaña Índice presente y sincronizada con el contenido.
 
-## 5. Decisiones a confirmar por el cliente
+## 5. Decisiones a confirmar
 
 1. **Profundidad**: ¿el nivel de detalle (incluir EER, agregación, notación pata de gallo, UML) es el adecuado para C1, o se prefiere recortar a notación de Chen + DFD + flujograma?
 2. **UML**: ¿se mantiene UML como equivalencia transversal o se trata como epígrafe independiente más extenso (último punto del índice oficial)?
